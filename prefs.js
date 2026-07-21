@@ -3,9 +3,12 @@ import Gtk from 'gi://Gtk';
 import Gio from 'gi://Gio';
 import GUdev from 'gi://GUdev';
 
-import {ExtensionPreferences} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
+import * as PrefsMod from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 import {listUsbDevices} from './lib/usb.js';
+
+const {ExtensionPreferences} = PrefsMod;
+const _ = PrefsMod.gettext ?? (s => s);
 
 function comboRow(title, subtitle, settings, key, nicks, labels, handlers) {
     const row = new Adw.ComboRow({
@@ -44,26 +47,26 @@ export default class GnomeUsbMonPrefs extends ExtensionPreferences {
                 settings.disconnect(id);
         });
         const page = new Adw.PreferencesPage({
-            title: 'Основное',
+            title: _('Основное'),
             icon_name: 'preferences-system-symbolic',
         });
         window.add(page);
 
         // --- Панель ---
-        const gPanel = new Adw.PreferencesGroup({title: 'Панель'});
+        const gPanel = new Adw.PreferencesGroup({title: _('Панель')});
         page.add(gPanel);
         gPanel.add(comboRow(
-            'Отображение', 'Что показывать в топ-баре',
+            _('Отображение'), _('Что показывать в топ-баре'),
             settings, 'panel-mode',
             ['icon-only', 'icon-watts', 'icon-watts-percent'],
-            ['Только иконка', 'Иконка + ватты', 'Иконка + ватты + %'], handlers));
+            [_('Только иконка'), _('Иконка + ватты'), _('Иконка + ватты + %')], handlers));
         gPanel.add(switchRow(
-            'Скрывать когда пусто', 'Прятать индикатор без внешних устройств',
+            _('Скрывать когда пусто'), _('Прятать индикатор без внешних устройств'),
             settings, 'hide-when-idle'));
 
         const spin = new Adw.SpinRow({
-            title: 'Интервал опроса',
-            subtitle: 'Секунды между чтением живых ватт',
+            title: _('Интервал опроса'),
+            subtitle: _('Секунды между чтением живых ватт'),
             adjustment: new Gtk.Adjustment({
                 lower: 1, upper: 10, step_increment: 1, page_increment: 1,
             }),
@@ -72,31 +75,31 @@ export default class GnomeUsbMonPrefs extends ExtensionPreferences {
         gPanel.add(spin);
 
         // --- USB-список ---
-        const gUsb = new Adw.PreferencesGroup({title: 'Список USB'});
+        const gUsb = new Adw.PreferencesGroup({title: _('Список USB')});
         page.add(gUsb);
         gUsb.add(comboRow(
-            'Показывать список', null,
+            _('Показывать список'), null,
             settings, 'usb-list-mode',
             ['basic', 'off'],
-            ['Базовый', 'Выкл'], handlers));
+            [_('Базовый'), _('Выкл')], handlers));
         gUsb.add(comboRow(
-            'Охват', 'Только внешние (removable) или все устройства',
+            _('Охват'), _('Только внешние (removable) или все устройства'),
             settings, 'usb-list-scope',
             ['external', 'all'],
-            ['Только внешние', 'Все'], handlers));
+            [_('Только внешние'), _('Все')], handlers));
 
         // --- Уведомления ---
-        const gNotify = new Adw.PreferencesGroup({title: 'Уведомления'});
+        const gNotify = new Adw.PreferencesGroup({title: _('Уведомления')});
         page.add(gNotify);
-        gNotify.add(switchRow('Зарядник', 'Подключение/отключение PD-зарядника',
+        gNotify.add(switchRow(_('Зарядник'), _('Подключение/отключение PD-зарядника'),
             settings, 'notify-charger'));
-        gNotify.add(switchRow('USB-устройства', 'Подключение/отключение прочих USB',
+        gNotify.add(switchRow(_('USB-устройства'), _('Подключение/отключение прочих USB'),
             settings, 'notify-usb'));
 
         // --- Доп-функции ---
-        const gFeat = new Adw.PreferencesGroup({title: 'Дополнительно'});
+        const gFeat = new Adw.PreferencesGroup({title: _('Дополнительно')});
         page.add(gFeat);
-        gFeat.add(switchRow('PDO-профили', 'Submenu с профилями питания зарядника',
+        gFeat.add(switchRow(_('PDO-профили'), _('Submenu с профилями питания зарядника'),
             settings, 'show-pdo-list'));
 
         // --- Игнор для авто-скрытия ---
@@ -105,8 +108,8 @@ export default class GnomeUsbMonPrefs extends ExtensionPreferences {
 
     _fillIgnoreGroup(page, settings) {
         const group = new Adw.PreferencesGroup({
-            title: 'Игнорировать для авто-скрытия',
-            description: 'Внешние устройства, которые НЕ должны показывать индикатор',
+            title: _('Игнорировать для авто-скрытия'),
+            description: _('Внешние устройства, которые НЕ должны показывать индикатор'),
         });
         page.add(group);
 
@@ -120,8 +123,8 @@ export default class GnomeUsbMonPrefs extends ExtensionPreferences {
 
         if (!devs.length) {
             group.add(new Adw.ActionRow({
-                title: 'Нет внешних устройств',
-                subtitle: 'Подключите устройство и снова откройте настройки',
+                title: _('Нет внешних устройств'),
+                subtitle: _('Подключите устройство и снова откройте настройки'),
             }));
             return;
         }

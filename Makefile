@@ -2,7 +2,7 @@ UUID = gnome-usb-mon@ska1006.github.io
 INSTALL_DIR = $(HOME)/.local/share/gnome-shell/extensions/$(UUID)
 FILES = metadata.json extension.js prefs.js stylesheet.css lib ui schemas
 
-.PHONY: all schemas install uninstall enable disable reload-nested pack test lint clean
+.PHONY: all schemas install uninstall enable disable reload-nested pack test lint pot clean
 
 all: schemas
 
@@ -35,6 +35,15 @@ test:
 
 lint:
 	npx eslint .
+
+# Извлечь переводимые строки (_()) в po/gnome-usb-mon.pot.
+pot:
+	mkdir -p po
+	xgettext --from-code=UTF-8 --language=JavaScript --keyword=_ \
+		--package-name=gnome-usb-mon --package-version=1.0 \
+		-o po/gnome-usb-mon.pot \
+		extension.js prefs.js ui/indicator.js
+	@echo "pot → po/gnome-usb-mon.pot"
 
 # Тест без перелогина: вложенный shell (Wayland).
 reload-nested: install
