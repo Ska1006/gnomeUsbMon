@@ -28,7 +28,8 @@
 
 ### 2.1 USB-устройства — enumeration
 `GUdev.Client.query_by_subsystem('usb')`, фильтр `DEVTYPE == usb_device` (пропуск `usb_interface`).
-Пропускаем root-hubs (имя вида `usbN`, `DRIVER=hub` без manufacturer).
+Пропускаем root-hubs (имя вида `usbN`).
+**External vs internal:** sysfs `removable` → `removable` (внешний юзер-порт, ACPI _UPC/_PLD) / `fixed` (встроенный: вебка, wifi) / `unknown`. `external = removable === 'removable'`. hide-when-idle и scope=external учитывают только `external`.
 
 | Поле | Источник |
 |---|---|
@@ -143,6 +144,7 @@ SanDisk Ultra
 | `hide-ignore-list` | strv (`as`) | `[]` | что НЕ считать «внешним» для скрытия (VID:PID или класс) |
 | `poll-interval` | int (1–10) | `2` | секунды опроса живых значений |
 | `usb-list-mode` | enum {`basic`,`off`} | `basic` | список USB-устройств в меню |
+| `usb-list-scope` | enum {`external`,`all`} | `external` | какие USB показывать (только removable / все) |
 | `notify-charger` | bool | `true` | уведомления plug/unplug зарядника |
 | `notify-usb` | bool | `false` | уведомления plug/unplug прочих USB |
 | `show-pdo-list` | bool | `true` | submenu с PDO-профилями зарядника |

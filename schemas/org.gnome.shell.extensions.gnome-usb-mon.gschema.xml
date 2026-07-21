@@ -9,6 +9,10 @@
     <value nick="off" value="0"/>
     <value nick="basic" value="1"/>
   </enum>
+  <enum id="org.gnome.shell.extensions.gnome-usb-mon.usb-list-scope">
+    <value nick="external" value="0"/>
+    <value nick="all" value="1"/>
+  </enum>
 
   <schema id="org.gnome.shell.extensions.gnome-usb-mon"
           path="/org/gnome/shell/extensions/gnome-usb-mon/">
@@ -34,6 +38,11 @@
     <key name="usb-list-mode" enum="org.gnome.shell.extensions.gnome-usb-mon.usb-list-mode">
       <default>'basic'</default>
       <summary>USB device list in menu</summary>
+    </key>
+    <key name="usb-list-scope" enum="org.gnome.shell.extensions.gnome-usb-mon.usb-list-scope">
+      <default>'external'</default>
+      <summary>Which USB devices to list</summary>
+      <description>external = только removable-порты; all = включая встроенные.</description>
     </key>
     <key name="notify-charger" type="b">
       <default>true</default>
