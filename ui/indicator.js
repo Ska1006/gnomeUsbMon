@@ -12,9 +12,10 @@ import {UdevMonitor} from '../lib/udev.js';
 
 export const Indicator = GObject.registerClass(
 class UsbPdIndicator extends PanelMenu.Button {
-    _init(settings) {
+    _init(extension) {
         super._init(0.5, 'USB & PD Monitor');
-        this._settings = settings;
+        this._extension = extension;
+        this._settings = extension.getSettings();
         this._menuOpen = false;
         this._chargerActive = false;
         this._timerId = 0;
@@ -50,6 +51,11 @@ class UsbPdIndicator extends PanelMenu.Button {
         this.menu.addMenuItem(this._usbTitle);
         this._usbSection = new PopupMenu.PopupMenuSection();
         this.menu.addMenuItem(this._usbSection);
+
+        this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+        const settingsItem = new PopupMenu.PopupMenuItem('Настройки');
+        settingsItem.connect('activate', () => this._extension.openPreferences());
+        this.menu.addMenuItem(settingsItem);
 
         this.menu.connect('open-state-changed', (_m, open) => {
             this._menuOpen = open;

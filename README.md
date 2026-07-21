@@ -11,8 +11,9 @@
 - **M1** — скелет: индикатор + роли Type-C портов, флаг подключения.
 - **M2** — живые ватты (UCSI voltage×current), hotplug (GUdev), скорость заряда батареи, адаптивный polling, hide-when-idle.
 - **M3** — список USB-устройств + drill-down submenu (VID:PID, класс, скорость, драйвер, serial, порт), external/internal по `removable`, учёт external-USB в hide-when-idle.
+- **M4** — Adwaita-настройки (`prefs.js`): все тумблеры, режим панели, интервал, охват USB, ignore-list с живым списком внешних устройств. Пункт «Настройки» в меню.
 
-Дальше: M4 настройки (Adwaita prefs + ignore-list UI), M5 уведомления/PDO/статистика, M6 упаковка.
+Дальше: M5 уведомления/PDO/статистика, M6 упаковка.
 
 ## Установка (локально)
 

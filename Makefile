@@ -1,6 +1,6 @@
 UUID = gnome-usb-mon@ska1006.github.io
 INSTALL_DIR = $(HOME)/.local/share/gnome-shell/extensions/$(UUID)
-FILES = metadata.json extension.js stylesheet.css lib ui schemas
+FILES = metadata.json extension.js prefs.js stylesheet.css lib ui schemas
 
 .PHONY: all schemas install uninstall enable disable reload-nested pack clean
 
