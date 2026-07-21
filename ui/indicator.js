@@ -345,18 +345,33 @@ class UsbPdIndicator extends PanelMenu.Button {
 
     _headerText(chargerWatts, battery) {
         if (this._chargerActive) {
-            let s = `${battery?.charging ? 'Заряд' : 'Питание'} · ${chargerWatts.toFixed(1)} W`;
+            const pd = `PD ${chargerWatts.toFixed(0)}W`; // контракт (потолок), не живой замер
+            if (battery?.charging) {
+                // Реальный измеренный заряд в батарею.
+                let s = 'Заряд';
+                if (battery.amps != null)
+                    s += `: ${battery.amps.toFixed(2)}A`;
+                if (battery.watts != null)
+                    s += ` · ${battery.watts.toFixed(1)}W`;
+                s += ' → батарея';
+                if (battery.capacity != null)
+                    s += ` · ${battery.capacity}%`;
+                return `${s} · ${pd}`;
+            }
+            let s = 'Питание';
             if (battery?.capacity != null)
                 s += ` · ${battery.capacity}%`;
-            return s;
+            return `${s} · ${pd}`;
         }
         if (battery) {
             const state = battery.discharging ? 'Разряд'
                 : battery.charging ? 'Заряд'
                 : (battery.status ?? '');
             let s = `Батарея: ${state}`;
+            if (battery.amps != null)
+                s += ` · ${battery.amps.toFixed(2)}A`;
             if (battery.watts != null)
-                s += ` · ${battery.watts.toFixed(1)} W`;
+                s += ` · ${battery.watts.toFixed(1)}W`;
             if (battery.capacity != null)
                 s += ` · ${battery.capacity}%`;
             return s;

@@ -57,11 +57,13 @@
 - `identity/` → VID/PID зарядника, product string (если отдаёт)
 - `usb_power_delivery_revision`
 
-### 2.4 Негоциированный контракт — живые ватты
+### 2.4 Негоциированный контракт (PD)
 `/sys/class/power_supply/ucsi-source-psy-USBC000:00N/`:
 - `online` (1 = зарядник активен)
-- `voltage_now` (µV) × `current_now` (µA) → **реальная негоциированная мощность**
+- `voltage_now` (µV) × `current_now` (µA) → **PD-контракт** (потолок). ВНИМАНИЕ: `current_now == current_max` (константа) — негоциированный лимит, НЕ живой замер тока. ADC на входе зарядника нет.
 - `voltage_max`, `current_max`, `usb_type`
+
+Реальный измеренный ток — только у батареи (`BAT1/current_now`, фьюел-гейдж): ток/мощность заряда В батарею. Полный ток ОТ зарядника (батарея + система) на этом железе не измеряется.
 
 **Маппинг** `ucsi-source-psy-...:00N` ↔ `typec portM`: N — UCSI connector index (1-based), port — 0-based. Резолвим через связь по `USBC000` + порядок; при неоднозначности сверяем `online` с наличием partner-папки.
 
