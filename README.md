@@ -67,6 +67,17 @@ GNOME_USB_MON_SYSFS_ROOT=fixtures/charger-100w gjs -m tests/pdo-test.js
 
 `GNOME_USB_MON_SYSFS_ROOT` подменяет корень sysfs → любой lib-модуль читает из фикстуры.
 
+### Переводы (i18n)
+
+Исходные строки — на английском (`_()`), переводы в `po/`. Русский: `po/ru.po`.
+
+```sh
+make pot                # обновить po/gnome-usb-mon.pot из кода
+make mo                 # скомпилировать po/*.po → locale/<lang>/LC_MESSAGES/*.mo
+```
+
+`make install` собирает `.mo` и кладёт `locale/` в расширение. Новый язык — скопировать `.pot` в `po/<lang>.po`, перевести, `make install`.
+
 ## Структура
 
 ```

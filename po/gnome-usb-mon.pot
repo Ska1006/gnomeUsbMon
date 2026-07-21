@@ -8,219 +8,207 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-usb-mon 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-22 01:13+0300\n"
+"POT-Creation-Date: 2026-07-22 01:28+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: prefs.js:50
-msgid "Основное"
+msgid "General"
 msgstr ""
 
 #: prefs.js:56
-msgid "Панель"
+msgid "Panel"
 msgstr ""
 
 #: prefs.js:59
-msgid "Отображение"
+msgid "Display"
 msgstr ""
 
 #: prefs.js:59
-msgid "Что показывать в топ-баре"
+msgid "What to show in the top bar"
 msgstr ""
 
 #: prefs.js:62
-msgid "Только иконка"
+msgid "Icon only"
 msgstr ""
 
 #: prefs.js:62
-msgid "Иконка + ватты"
+msgid "Icon + watts"
 msgstr ""
 
 #: prefs.js:62
-msgid "Иконка + ватты + %"
+msgid "Icon + watts + %"
 msgstr ""
 
 #: prefs.js:64
-msgid "Скрывать когда пусто"
+msgid "Hide when empty"
 msgstr ""
 
 #: prefs.js:64
-msgid "Прятать индикатор без внешних устройств"
+msgid "Hide the indicator when there are no external devices"
 msgstr ""
 
 #: prefs.js:68
-msgid "Интервал опроса"
+msgid "USB list"
 msgstr ""
 
-#: prefs.js:69
-msgid "Секунды между чтением живых ватт"
+#: prefs.js:71
+msgid "Show list"
 msgstr ""
 
-#: prefs.js:78
-msgid "Список USB"
+#: prefs.js:74
+msgid "Basic"
 msgstr ""
 
-#: prefs.js:81
-msgid "Показывать список"
+#: prefs.js:74
+msgid "Off"
+msgstr ""
+
+#: prefs.js:76
+msgid "Scope"
+msgstr ""
+
+#: prefs.js:76
+msgid "External (removable) only, or all devices"
+msgstr ""
+
+#: prefs.js:79
+msgid "External only"
+msgstr ""
+
+#: prefs.js:79
+msgid "All"
+msgstr ""
+
+#: prefs.js:82
+msgid "Notifications"
 msgstr ""
 
 #: prefs.js:84
-msgid "Базовый"
+msgid "Charger"
 msgstr ""
 
 #: prefs.js:84
-msgid "Выкл"
+msgid "PD charger plug/unplug"
+msgstr ""
+
+#: prefs.js:86 ui/indicator.js:69 ui/indicator.js:288
+msgid "USB devices"
 msgstr ""
 
 #: prefs.js:86
-msgid "Охват"
+msgid "Other USB devices plug/unplug"
 msgstr ""
 
-#: prefs.js:86
-msgid "Только внешние (removable) или все устройства"
-msgstr ""
-
-#: prefs.js:89
-msgid "Только внешние"
-msgstr ""
-
-#: prefs.js:89
-msgid "Все"
+#: prefs.js:90
+msgid "Advanced"
 msgstr ""
 
 #: prefs.js:92
-msgid "Уведомления"
+msgid "PDO profiles"
 msgstr ""
 
-#: prefs.js:94
-msgid "Зарядник"
+#: prefs.js:92
+msgid "Submenu with charger power profiles"
 msgstr ""
 
-#: prefs.js:94
-msgid "Подключение/отключение PD-зарядника"
-msgstr ""
-
-#: prefs.js:96
-msgid "USB-устройства"
-msgstr ""
-
-#: prefs.js:96
-msgid "Подключение/отключение прочих USB"
-msgstr ""
-
-#: prefs.js:100
-msgid "Дополнительно"
+#: prefs.js:101
+msgid "Ignore for auto-hide"
 msgstr ""
 
 #: prefs.js:102
-msgid "PDO-профили"
+msgid "External devices that should NOT show the indicator"
 msgstr ""
 
-#: prefs.js:102
-msgid "Submenu с профилями питания зарядника"
+#: prefs.js:116
+msgid "No external devices"
 msgstr ""
 
-#: prefs.js:111
-msgid "Игнорировать для авто-скрытия"
+#: prefs.js:117
+msgid "Plug a device and reopen settings"
 msgstr ""
 
-#: prefs.js:112
-msgid "Внешние устройства, которые НЕ должны показывать индикатор"
+#: ui/indicator.js:76
+msgid "Settings"
 msgstr ""
 
-#: prefs.js:126
-msgid "Нет внешних устройств"
+#: ui/indicator.js:215
+msgid "connected"
 msgstr ""
 
-#: prefs.js:127
-msgid "Подключите устройство и снова откройте настройки"
+#: ui/indicator.js:253
+msgid "active"
 msgstr ""
 
-#: ui/indicator.js:65 ui/indicator.js:284
-msgid "USB устройства"
+#: ui/indicator.js:297
+msgid "no external devices"
 msgstr ""
 
-#: ui/indicator.js:72
-msgid "Настройки"
+#: ui/indicator.js:297
+msgid "no devices"
 msgstr ""
 
-#: ui/indicator.js:211
-msgid "подключено"
+#: ui/indicator.js:321
+msgid "Class"
 msgstr ""
 
-#: ui/indicator.js:249
-msgid "активно"
-msgstr ""
-
-#: ui/indicator.js:293
-msgid "нет внешних устройств"
-msgstr ""
-
-#: ui/indicator.js:293
-msgid "нет устройств"
-msgstr ""
-
-#: ui/indicator.js:317
-msgid "Класс"
-msgstr ""
-
-#: ui/indicator.js:318
-msgid "Скорость"
-msgstr ""
-
-#: ui/indicator.js:319
-msgid "Макс. ток"
-msgstr ""
-
-#: ui/indicator.js:320
-msgid "Драйвер"
-msgstr ""
-
-#: ui/indicator.js:322 ui/indicator.js:343 ui/indicator.js:348
-msgid "Порт"
+#: ui/indicator.js:322
+msgid "Speed"
 msgstr ""
 
 #: ui/indicator.js:323
-msgid "Тип"
+msgid "Max current"
 msgstr ""
 
-#: ui/indicator.js:342
-msgid "Зарядник подключён"
+#: ui/indicator.js:324
+msgid "Driver"
 msgstr ""
 
-#: ui/indicator.js:347
-msgid "Зарядник отключён"
+#: ui/indicator.js:326 ui/indicator.js:347 ui/indicator.js:352
+msgid "Port"
 msgstr ""
 
-#: ui/indicator.js:354
-msgid "USB подключено"
+#: ui/indicator.js:327
+msgid "Type"
 msgstr ""
 
-#: ui/indicator.js:359
-msgid "USB отключено"
+#: ui/indicator.js:346
+msgid "Charger connected"
 msgstr ""
 
-#: ui/indicator.js:370 ui/indicator.js:377
-msgid "Заряд"
+#: ui/indicator.js:351
+msgid "Charger disconnected"
 msgstr ""
 
-#: ui/indicator.js:370
-msgid "Питание"
+#: ui/indicator.js:358
+msgid "USB connected"
 msgstr ""
 
-#: ui/indicator.js:376
-msgid "Разряд"
+#: ui/indicator.js:363
+msgid "USB disconnected"
 msgstr ""
 
-#: ui/indicator.js:379
-msgid "Батарея"
+#: ui/indicator.js:374 ui/indicator.js:381
+msgid "Charging"
 msgstr ""
 
-#: ui/indicator.js:384
-msgid "Нет внешнего питания"
+#: ui/indicator.js:374
+msgid "Powered"
+msgstr ""
+
+#: ui/indicator.js:380
+msgid "Discharging"
+msgstr ""
+
+#: ui/indicator.js:383
+msgid "Battery"
+msgstr ""
+
+#: ui/indicator.js:388
+msgid "No external power"
 msgstr ""
