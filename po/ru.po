@@ -1,0 +1,160 @@
+# Russian translation for gnome-usb-mon.
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-usb-mon 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2026-07-22\n"
+"Last-Translator: Ska1006\n"
+"Language-Team: Russian\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+
+msgid "active"
+msgstr "активно"
+
+msgid "Advanced"
+msgstr "Дополнительно"
+
+msgid "All"
+msgstr "Все"
+
+msgid "Basic"
+msgstr "Базовый"
+
+msgid "Battery"
+msgstr "Батарея"
+
+msgid "Charger"
+msgstr "Зарядник"
+
+msgid "Charger connected"
+msgstr "Зарядник подключён"
+
+msgid "Charger disconnected"
+msgstr "Зарядник отключён"
+
+msgid "Charging"
+msgstr "Заряд"
+
+msgid "Class"
+msgstr "Класс"
+
+msgid "connected"
+msgstr "подключено"
+
+msgid "Discharging"
+msgstr "Разряд"
+
+msgid "Display"
+msgstr "Отображение"
+
+msgid "Driver"
+msgstr "Драйвер"
+
+msgid "External devices that should NOT show the indicator"
+msgstr "Внешние устройства, которые НЕ должны показывать индикатор"
+
+msgid "External only"
+msgstr "Только внешние"
+
+msgid "External (removable) only, or all devices"
+msgstr "Только внешние (removable) или все устройства"
+
+msgid "General"
+msgstr "Основное"
+
+msgid "Hide the indicator when there are no external devices"
+msgstr "Прятать индикатор без внешних устройств"
+
+msgid "Hide when empty"
+msgstr "Скрывать когда пусто"
+
+msgid "Icon only"
+msgstr "Только иконка"
+
+msgid "Icon + watts + %"
+msgstr "Иконка + ватты + %"
+
+msgid "Icon + watts"
+msgstr "Иконка + ватты"
+
+msgid "Ignore for auto-hide"
+msgstr "Игнорировать для авто-скрытия"
+
+msgid "Max current"
+msgstr "Макс. ток"
+
+msgid "no devices"
+msgstr "нет устройств"
+
+msgid "no external devices"
+msgstr "нет внешних устройств"
+
+msgid "No external devices"
+msgstr "Нет внешних устройств"
+
+msgid "No external power"
+msgstr "Нет внешнего питания"
+
+msgid "Notifications"
+msgstr "Уведомления"
+
+msgid "Off"
+msgstr "Выкл"
+
+msgid "Other USB devices plug/unplug"
+msgstr "Подключение/отключение прочих USB"
+
+msgid "Panel"
+msgstr "Панель"
+
+msgid "PD charger plug/unplug"
+msgstr "Подключение/отключение PD-зарядника"
+
+msgid "PDO profiles"
+msgstr "PDO-профили"
+
+msgid "Plug a device and reopen settings"
+msgstr "Подключите устройство и снова откройте настройки"
+
+msgid "Port"
+msgstr "Порт"
+
+msgid "Powered"
+msgstr "Питание"
+
+msgid "Scope"
+msgstr "Охват"
+
+msgid "Settings"
+msgstr "Настройки"
+
+msgid "Show list"
+msgstr "Показывать список"
+
+msgid "Speed"
+msgstr "Скорость"
+
+msgid "Submenu with charger power profiles"
+msgstr "Submenu с профилями питания зарядника"
+
+msgid "Type"
+msgstr "Тип"
+
+msgid "USB connected"
+msgstr "USB подключено"
+
+msgid "USB devices"
+msgstr "USB устройства"
+
+msgid "USB disconnected"
+msgstr "USB отключено"
+
+msgid "USB list"
+msgstr "Список USB"
+
+msgid "What to show in the top bar"
+msgstr "Что показывать в топ-баре"

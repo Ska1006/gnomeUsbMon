@@ -1,17 +1,28 @@
 UUID = gnome-usb-mon@ska1006.github.io
+DOMAIN = gnome-usb-mon
 INSTALL_DIR = $(HOME)/.local/share/gnome-shell/extensions/$(UUID)
-FILES = metadata.json extension.js prefs.js stylesheet.css lib ui schemas
+FILES = metadata.json extension.js prefs.js stylesheet.css lib ui schemas locale
 
-.PHONY: all schemas install uninstall enable disable reload-nested pack test lint pot clean
+LOCALES = $(wildcard po/*.po)
+MO = $(patsubst po/%.po,locale/%/LC_MESSAGES/$(DOMAIN).mo,$(LOCALES))
 
-all: schemas
+.PHONY: all schemas mo install uninstall enable disable reload-nested pack test lint pot clean
+
+all: schemas mo
 
 schemas: schemas/gschemas.compiled
 
 schemas/gschemas.compiled: schemas/*.gschema.xml
 	glib-compile-schemas schemas/
 
-install: schemas
+# Компиляция переводов po/<lang>.po → locale/<lang>/LC_MESSAGES/<domain>.mo
+mo: $(MO)
+
+locale/%/LC_MESSAGES/$(DOMAIN).mo: po/%.po
+	mkdir -p $(dir $@)
+	msgfmt $< -o $@
+
+install: schemas mo
 	rm -rf "$(INSTALL_DIR)"
 	mkdir -p "$(INSTALL_DIR)"
 	cp -r $(FILES) "$(INSTALL_DIR)/"
@@ -52,7 +63,9 @@ reload-nested: install
 pack: schemas
 	gnome-extensions pack --force \
 		--extra-source=lib --extra-source=ui \
+		--podir=po \
 		--schema=schemas/org.gnome.shell.extensions.gnome-usb-mon.gschema.xml .
 
 clean:
 	rm -f schemas/gschemas.compiled *.shell-extension.zip
+	rm -rf locale

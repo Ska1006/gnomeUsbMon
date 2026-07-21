@@ -4,3 +4,4 @@ schemas/gschemas.compiled
 fixtures/charger-100w/
 node_modules/
 package-lock.json
+locale/

@@ -47,49 +47,49 @@ export default class GnomeUsbMonPrefs extends ExtensionPreferences {
                 settings.disconnect(id);
         });
         const page = new Adw.PreferencesPage({
-            title: _('Основное'),
+            title: _('General'),
             icon_name: 'preferences-system-symbolic',
         });
         window.add(page);
 
-        // --- Панель ---
-        const gPanel = new Adw.PreferencesGroup({title: _('Панель')});
+        // --- Panel ---
+        const gPanel = new Adw.PreferencesGroup({title: _('Panel')});
         page.add(gPanel);
         gPanel.add(comboRow(
-            _('Отображение'), _('Что показывать в топ-баре'),
+            _('Display'), _('What to show in the top bar'),
             settings, 'panel-mode',
             ['icon-only', 'icon-watts', 'icon-watts-percent'],
-            [_('Только иконка'), _('Иконка + ватты'), _('Иконка + ватты + %')], handlers));
+            [_('Icon only'), _('Icon + watts'), _('Icon + watts + %')], handlers));
         gPanel.add(switchRow(
-            _('Скрывать когда пусто'), _('Прятать индикатор без внешних устройств'),
+            _('Hide when empty'), _('Hide the indicator when there are no external devices'),
             settings, 'hide-when-idle'));
 
-        // --- USB-список ---
-        const gUsb = new Adw.PreferencesGroup({title: _('Список USB')});
+        // --- USB list ---
+        const gUsb = new Adw.PreferencesGroup({title: _('USB list')});
         page.add(gUsb);
         gUsb.add(comboRow(
-            _('Показывать список'), null,
+            _('Show list'), null,
             settings, 'usb-list-mode',
             ['basic', 'off'],
-            [_('Базовый'), _('Выкл')], handlers));
+            [_('Basic'), _('Off')], handlers));
         gUsb.add(comboRow(
-            _('Охват'), _('Только внешние (removable) или все устройства'),
+            _('Scope'), _('External (removable) only, or all devices'),
             settings, 'usb-list-scope',
             ['external', 'all'],
-            [_('Только внешние'), _('Все')], handlers));
+            [_('External only'), _('All')], handlers));
 
-        // --- Уведомления ---
-        const gNotify = new Adw.PreferencesGroup({title: _('Уведомления')});
+        // --- Notifications ---
+        const gNotify = new Adw.PreferencesGroup({title: _('Notifications')});
         page.add(gNotify);
-        gNotify.add(switchRow(_('Зарядник'), _('Подключение/отключение PD-зарядника'),
+        gNotify.add(switchRow(_('Charger'), _('PD charger plug/unplug'),
             settings, 'notify-charger'));
-        gNotify.add(switchRow(_('USB-устройства'), _('Подключение/отключение прочих USB'),
+        gNotify.add(switchRow(_('USB devices'), _('Other USB devices plug/unplug'),
             settings, 'notify-usb'));
 
-        // --- Доп-функции ---
-        const gFeat = new Adw.PreferencesGroup({title: _('Дополнительно')});
+        // --- Advanced ---
+        const gFeat = new Adw.PreferencesGroup({title: _('Advanced')});
         page.add(gFeat);
-        gFeat.add(switchRow(_('PDO-профили'), _('Submenu с профилями питания зарядника'),
+        gFeat.add(switchRow(_('PDO profiles'), _('Submenu with charger power profiles'),
             settings, 'show-pdo-list'));
 
         // --- Игнор для авто-скрытия ---
@@ -98,8 +98,8 @@ export default class GnomeUsbMonPrefs extends ExtensionPreferences {
 
     _fillIgnoreGroup(page, settings) {
         const group = new Adw.PreferencesGroup({
-            title: _('Игнорировать для авто-скрытия'),
-            description: _('Внешние устройства, которые НЕ должны показывать индикатор'),
+            title: _('Ignore for auto-hide'),
+            description: _('External devices that should NOT show the indicator'),
         });
         page.add(group);
 
@@ -113,8 +113,8 @@ export default class GnomeUsbMonPrefs extends ExtensionPreferences {
 
         if (!devs.length) {
             group.add(new Adw.ActionRow({
-                title: _('Нет внешних устройств'),
-                subtitle: _('Подключите устройство и снова откройте настройки'),
+                title: _('No external devices'),
+                subtitle: _('Plug a device and reopen settings'),
             }));
             return;
         }
