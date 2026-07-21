@@ -29,7 +29,7 @@ uninstall:
 
 # Офлайн-тесты: парсинг PD/PSY на фикстуре + юнит чистых функций.
 test:
-	./fixtures/gen.sh
+	bash fixtures/gen.sh
 	GNOME_USB_MON_SYSFS_ROOT=fixtures/charger-100w gjs -m tests/pdo-test.js
 	gjs -m tests/unit-test.js
 

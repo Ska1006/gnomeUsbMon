@@ -1,10 +1,34 @@
 # USB & PD Monitor (GNOME Shell)
 
+![CI](https://github.com/Ska1006/gnomeUsbMon/actions/workflows/ci.yml/badge.svg)
+
 Состояние подключённых USB-устройств и USB-C **Power Delivery** зарядников: негоциированные ватты, PDO-профили, роли портов, скорость заряда батареи.
 
 - Полная спека: [SPEC.md](SPEC.md)
 - UUID: `gnome-usb-mon@ska1006.github.io`
 - GNOME Shell **50** · Wayland/X11 · root не требуется
+
+## Внешний вид
+
+```
+ top bar:  ⚡65W ▾
+┌────────────────────────────────────────┐
+│ ⚡ Заряд · 92% · PD 65W                 │
+│ ────────────────────────────────────── │
+│ ⚡ USB-C port0  [sink/host]  20V·3.25A·65W ▸│  ← PDO submenu
+│      5.0V · 3.00A · 15W                 │
+│      …                                  │
+│      20.0V · 3.25A · 65W  ← активно     │
+│ ▪ USB-C port1  [sink/device]  idle      │
+│ ────────────────────────────────────── │
+│ USB устройства (2)                      │
+│ 🖴 SanDisk Ultra        5G          ▸    │  ← drill-down
+│ ⌨ Logitech Receiver    1.5M        ▸    │
+│ ────────────────────────────────────── │
+│ ⚙ Настройки                            │
+└────────────────────────────────────────┘
+```
+(иконки — symbolic из Adwaita; эмодзи здесь только для схемы)
 
 ## Статус
 
