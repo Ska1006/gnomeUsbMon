@@ -1,0 +1,226 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the gnome-usb-mon package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-usb-mon 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-22 01:13+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: prefs.js:50
+msgid "Основное"
+msgstr ""
+
+#: prefs.js:56
+msgid "Панель"
+msgstr ""
+
+#: prefs.js:59
+msgid "Отображение"
+msgstr ""
+
+#: prefs.js:59
+msgid "Что показывать в топ-баре"
+msgstr ""
+
+#: prefs.js:62
+msgid "Только иконка"
+msgstr ""
+
+#: prefs.js:62
+msgid "Иконка + ватты"
+msgstr ""
+
+#: prefs.js:62
+msgid "Иконка + ватты + %"
+msgstr ""
+
+#: prefs.js:64
+msgid "Скрывать когда пусто"
+msgstr ""
+
+#: prefs.js:64
+msgid "Прятать индикатор без внешних устройств"
+msgstr ""
+
+#: prefs.js:68
+msgid "Интервал опроса"
+msgstr ""
+
+#: prefs.js:69
+msgid "Секунды между чтением живых ватт"
+msgstr ""
+
+#: prefs.js:78
+msgid "Список USB"
+msgstr ""
+
+#: prefs.js:81
+msgid "Показывать список"
+msgstr ""
+
+#: prefs.js:84
+msgid "Базовый"
+msgstr ""
+
+#: prefs.js:84
+msgid "Выкл"
+msgstr ""
+
+#: prefs.js:86
+msgid "Охват"
+msgstr ""
+
+#: prefs.js:86
+msgid "Только внешние (removable) или все устройства"
+msgstr ""
+
+#: prefs.js:89
+msgid "Только внешние"
+msgstr ""
+
+#: prefs.js:89
+msgid "Все"
+msgstr ""
+
+#: prefs.js:92
+msgid "Уведомления"
+msgstr ""
+
+#: prefs.js:94
+msgid "Зарядник"
+msgstr ""
+
+#: prefs.js:94
+msgid "Подключение/отключение PD-зарядника"
+msgstr ""
+
+#: prefs.js:96
+msgid "USB-устройства"
+msgstr ""
+
+#: prefs.js:96
+msgid "Подключение/отключение прочих USB"
+msgstr ""
+
+#: prefs.js:100
+msgid "Дополнительно"
+msgstr ""
+
+#: prefs.js:102
+msgid "PDO-профили"
+msgstr ""
+
+#: prefs.js:102
+msgid "Submenu с профилями питания зарядника"
+msgstr ""
+
+#: prefs.js:111
+msgid "Игнорировать для авто-скрытия"
+msgstr ""
+
+#: prefs.js:112
+msgid "Внешние устройства, которые НЕ должны показывать индикатор"
+msgstr ""
+
+#: prefs.js:126
+msgid "Нет внешних устройств"
+msgstr ""
+
+#: prefs.js:127
+msgid "Подключите устройство и снова откройте настройки"
+msgstr ""
+
+#: ui/indicator.js:65 ui/indicator.js:284
+msgid "USB устройства"
+msgstr ""
+
+#: ui/indicator.js:72
+msgid "Настройки"
+msgstr ""
+
+#: ui/indicator.js:211
+msgid "подключено"
+msgstr ""
+
+#: ui/indicator.js:249
+msgid "активно"
+msgstr ""
+
+#: ui/indicator.js:293
+msgid "нет внешних устройств"
+msgstr ""
+
+#: ui/indicator.js:293
+msgid "нет устройств"
+msgstr ""
+
+#: ui/indicator.js:317
+msgid "Класс"
+msgstr ""
+
+#: ui/indicator.js:318
+msgid "Скорость"
+msgstr ""
+
+#: ui/indicator.js:319
+msgid "Макс. ток"
+msgstr ""
+
+#: ui/indicator.js:320
+msgid "Драйвер"
+msgstr ""
+
+#: ui/indicator.js:322 ui/indicator.js:343 ui/indicator.js:348
+msgid "Порт"
+msgstr ""
+
+#: ui/indicator.js:323
+msgid "Тип"
+msgstr ""
+
+#: ui/indicator.js:342
+msgid "Зарядник подключён"
+msgstr ""
+
+#: ui/indicator.js:347
+msgid "Зарядник отключён"
+msgstr ""
+
+#: ui/indicator.js:354
+msgid "USB подключено"
+msgstr ""
+
+#: ui/indicator.js:359
+msgid "USB отключено"
+msgstr ""
+
+#: ui/indicator.js:370 ui/indicator.js:377
+msgid "Заряд"
+msgstr ""
+
+#: ui/indicator.js:370
+msgid "Питание"
+msgstr ""
+
+#: ui/indicator.js:376
+msgid "Разряд"
+msgstr ""
+
+#: ui/indicator.js:379
+msgid "Батарея"
+msgstr ""
+
+#: ui/indicator.js:384
+msgid "Нет внешнего питания"
+msgstr ""
