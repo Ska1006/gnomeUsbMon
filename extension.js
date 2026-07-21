@@ -6,7 +6,7 @@ import {Indicator} from './ui/indicator.js';
 export default class GnomeUsbMonExtension extends Extension {
     enable() {
         this._settings = this.getSettings();
-        this._indicator = new Indicator();
+        this._indicator = new Indicator(this._settings);
         Main.panel.addToStatusArea(this.uuid, this._indicator);
     }
 
