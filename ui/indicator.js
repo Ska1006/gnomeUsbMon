@@ -5,9 +5,9 @@ import Clutter from 'gi://Clutter';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
-import {readAllPorts, readPartnerPdos, pdoMaxWatts} from '../lib/pd.js';
+import {readAllPorts, readPartnerPdos, pdoMaxWatts, activePdoIndex} from '../lib/pd.js';
 import {readUcsiSources, readBattery, acOnline} from '../lib/power.js';
-import {listUsbDevices, isIgnored} from '../lib/usb.js';
+import {listUsbDevices, isIgnored, usbIconName} from '../lib/usb.js';
 import {UdevMonitor} from '../lib/udev.js';
 import {Notifier} from '../lib/notifier.js';
 
@@ -20,7 +20,9 @@ class UsbPdIndicator extends PanelMenu.Button {
         this._menuOpen = false;
         this._chargerActive = false;
         this._timerId = 0;
+        this._coalesceId = 0;
         this._refreshBusy = false;
+        this._refreshPending = false;
         this._snapshot = null;
         this._usbSig = null;
         this._portSig = null;
@@ -77,7 +79,7 @@ class UsbPdIndicator extends PanelMenu.Button {
 
         // --- hotplug ---
         this._udev = new UdevMonitor();
-        this._udevId = this._udev.connect('changed', () => this.refresh());
+        this._udevId = this._udev.connect('changed', () => this._scheduleRefresh());
 
         // --- настройки ---
         this._settingsId = this._settings.connect('changed', () => {
@@ -94,9 +96,23 @@ class UsbPdIndicator extends PanelMenu.Button {
         this.refresh();
     }
 
-    async refresh() {
-        if (this._refreshBusy)
+    // Коалесцируем всплески udev-событий (plug → пачка uevent) в один refresh.
+    _scheduleRefresh() {
+        if (this._coalesceId)
             return;
+        this._coalesceId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 200, () => {
+            this._coalesceId = 0;
+            this.refresh();
+            return GLib.SOURCE_REMOVE;
+        });
+    }
+
+    async refresh() {
+        // Не дропаем наложенный вызов — помечаем pending и до-рефрешим после.
+        if (this._refreshBusy) {
+            this._refreshPending = true;
+            return;
+        }
         this._refreshBusy = true;
         try {
             const ports = await readAllPorts();
@@ -116,6 +132,10 @@ class UsbPdIndicator extends PanelMenu.Button {
             console.error(`gnome-usb-mon: refresh failed: ${e}`);
         } finally {
             this._refreshBusy = false;
+            if (this._refreshPending) {
+                this._refreshPending = false;
+                this._scheduleRefresh();
+            }
         }
     }
 
@@ -220,13 +240,11 @@ class UsbPdIndicator extends PanelMenu.Button {
                 item = new PopupMenu.PopupSubMenuMenuItem(title, true);
                 item.icon.icon_name = icon;
                 const negV = src?.volts ?? null;
-                for (const pdo of pdos) {
-                    let lbl = pdo.label;
-                    if (pdo.type === 'fixed_supply' && negV != null &&
-                        pdo.volts != null && Math.abs(pdo.volts - negV) < 0.6)
-                        lbl += '  ← активно';
+                const activeIdx = activePdoIndex(pdos, negV);
+                pdos.forEach((pdo, i) => {
+                    const lbl = pdo.label + (i === activeIdx ? '  ← активно' : '');
                     item.menu.addMenuItem(new PopupMenu.PopupMenuItem(lbl, {reactive: false}));
-                }
+                });
             } else {
                 item = new PopupMenu.PopupImageMenuItem(title, icon, {reactive: false});
             }
@@ -284,24 +302,9 @@ class UsbPdIndicator extends PanelMenu.Button {
         return 'media-removable-symbolic';           // idle
     }
 
-    _usbIcon(classHex) {
-        switch (classHex) {
-        case 0x08: return 'drive-harddisk-usb-symbolic'; // Mass Storage
-        case 0x03: return 'input-keyboard-symbolic';     // HID
-        case 0x01: return 'audio-headphones-symbolic';   // Audio
-        case 0x06:
-        case 0x0e: return 'camera-web-symbolic';         // Image / Video
-        case 0x07: return 'printer-symbolic';            // Printer
-        case 0x09: return 'view-grid-symbolic';          // Hub
-        case 0x02:
-        case 0xe0: return 'network-wireless-symbolic';   // Comm / Wireless
-        default: return 'media-removable-symbolic';
-        }
-    }
-
     _buildUsbItem(dev) {
         const item = new PopupMenu.PopupSubMenuMenuItem(`${dev.title}   ${dev.speed}`, true);
-        item.icon.icon_name = this._usbIcon(dev.classHex);
+        item.icon.icon_name = usbIconName(dev.classHex);
         const add = (k, v) => {
             if (v != null && v !== '')
                 item.menu.addMenuItem(new PopupMenu.PopupMenuItem(`${k}: ${v}`, {reactive: false}));
@@ -309,6 +312,7 @@ class UsbPdIndicator extends PanelMenu.Button {
         add('VID:PID', dev.vidpid);
         add('Класс', dev.className);
         add('Скорость', dev.speed);
+        add('Макс. ток', dev.maxPower);
         add('Драйвер', dev.driver);
         add('Serial', dev.serial);
         add('Порт', dev.name);
@@ -377,9 +381,10 @@ class UsbPdIndicator extends PanelMenu.Button {
         return 'Нет внешнего питания';
     }
 
-    // Polling только когда меню открыто ИЛИ идёт зарядка (живые ватты).
+    // Polling только при зарядке (живые ватты). Структурные изменения при
+    // открытом меню ловит udev, поэтому menuOpen для опроса не нужен.
     _ensurePolling() {
-        const need = this._menuOpen || this._chargerActive;
+        const need = this._chargerActive;
         if (need && !this._timerId) {
             const iv = this._settings.get_int('poll-interval');
             this._timerId = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, iv, () => {
@@ -396,6 +401,10 @@ class UsbPdIndicator extends PanelMenu.Button {
         if (this._timerId) {
             GLib.Source.remove(this._timerId);
             this._timerId = 0;
+        }
+        if (this._coalesceId) {
+            GLib.Source.remove(this._coalesceId);
+            this._coalesceId = 0;
         }
         if (this._udev) {
             this._udev.disconnect(this._udevId);
