@@ -69,7 +69,8 @@ GNOME_USB_MON_SYSFS_ROOT=fixtures/charger-100w gjs -m tests/pdo-test.js
 
 ### Переводы (i18n)
 
-Исходные строки — на английском (`_()`), переводы в `po/`. Русский: `po/ru.po`.
+Исходные строки — на английском (`_()`), переводы в `po/`.
+Языки: `de fr es ru zh_CN pt_BR it pl ja` (+ английский-исходник).
 
 ```sh
 make pot                # обновить po/gnome-usb-mon.pot из кода
