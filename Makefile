@@ -2,7 +2,7 @@ UUID = gnome-usb-mon@ska1006.github.io
 INSTALL_DIR = $(HOME)/.local/share/gnome-shell/extensions/$(UUID)
 FILES = metadata.json extension.js prefs.js stylesheet.css lib ui schemas
 
-.PHONY: all schemas install uninstall enable disable reload-nested pack clean
+.PHONY: all schemas install uninstall enable disable reload-nested pack test clean
 
 all: schemas
 
@@ -26,6 +26,11 @@ disable:
 
 uninstall:
 	rm -rf "$(INSTALL_DIR)"
+
+# Офлайн-тест парсинга PD/PSY на синтетической фикстуре.
+test:
+	./fixtures/gen.sh
+	GNOME_USB_MON_SYSFS_ROOT=fixtures/charger-100w gjs -m tests/pdo-test.js
 
 # Тест без перелогина: вложенный shell (Wayland).
 reload-nested: install
