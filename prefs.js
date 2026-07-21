@@ -64,16 +64,6 @@ export default class GnomeUsbMonPrefs extends ExtensionPreferences {
             _('Скрывать когда пусто'), _('Прятать индикатор без внешних устройств'),
             settings, 'hide-when-idle'));
 
-        const spin = new Adw.SpinRow({
-            title: _('Интервал опроса'),
-            subtitle: _('Секунды между чтением живых ватт'),
-            adjustment: new Gtk.Adjustment({
-                lower: 1, upper: 10, step_increment: 1, page_increment: 1,
-            }),
-        });
-        settings.bind('poll-interval', spin, 'value', Gio.SettingsBindFlags.DEFAULT);
-        gPanel.add(spin);
-
         // --- USB-список ---
         const gUsb = new Adw.PreferencesGroup({title: _('Список USB')});
         page.add(gUsb);

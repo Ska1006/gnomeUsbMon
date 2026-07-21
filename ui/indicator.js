@@ -15,6 +15,10 @@ import * as ExtMod from 'resource:///org/gnome/shell/extensions/extension.js';
 // gettext домена расширения; fallback-identity если экспорт недоступен.
 const _ = ExtMod.gettext ?? (s => s);
 
+// Период опроса живых значений при активной зарядке (сек). Значения почти
+// не меняются в рамках контракта, поэтому фикс — настройка не нужна.
+const POLL_SECONDS = 2;
+
 export const Indicator = GObject.registerClass(
 class UsbPdIndicator extends PanelMenu.Button {
     _init(extension) {
@@ -389,8 +393,7 @@ class UsbPdIndicator extends PanelMenu.Button {
     _ensurePolling() {
         const need = this._chargerActive;
         if (need && !this._timerId) {
-            const iv = this._settings.get_int('poll-interval');
-            this._timerId = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, iv, () => {
+            this._timerId = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, POLL_SECONDS, () => {
                 this.refresh();
                 return GLib.SOURCE_CONTINUE;
             });

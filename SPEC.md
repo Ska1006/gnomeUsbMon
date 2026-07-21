@@ -79,7 +79,7 @@
   - `typec` partner add/remove → перечитать PD-секцию + уведомление
   - `usb` add/remove → пересобрать список устройств (+ уведомление, если включено)
   - `power_supply` change → обновить `online`
-- **Polling-таймер** (`GLib.timeout_add_seconds`, интервал из настроек, дефолт 2 с) — перечитывает `voltage_now`/`current_now` (меняются без uevent) для живых ватт и скорости заряда.
+- **Polling-таймер** (`GLib.timeout_add_seconds`, фикс 2 с) — перечитывает `voltage_now`/`current_now` для живых значений. Работает только при активной зарядке (иначе значения статичны, hotplug ловит udev).
   - **Экономия энергии:** таймер работает только когда (dropdown открыт) ИЛИ (панель показывает ватты) ИЛИ (идёт зарядка). Иначе остановлен.
 - Все таймеры/сигналы снимаются в `disable()`.
 
@@ -143,7 +143,6 @@ SanDisk Ultra
 | `panel-mode` | enum | `icon-watts` | вид в топ-баре |
 | `hide-when-idle` | bool | `true` | скрывать индикатор когда нет внешних устройств |
 | `hide-ignore-list` | strv (`as`) | `[]` | что НЕ считать «внешним» для скрытия (VID:PID или класс) |
-| `poll-interval` | int (1–10) | `2` | секунды опроса живых значений |
 | `usb-list-mode` | enum {`basic`,`off`} | `basic` | список USB-устройств в меню |
 | `usb-list-scope` | enum {`external`,`all`} | `external` | какие USB показывать (только removable / все) |
 | `notify-charger` | bool | `true` | уведомления plug/unplug зарядника |
