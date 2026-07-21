@@ -5,10 +5,12 @@ import Clutter from 'gi://Clutter';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
-import {readAllPorts} from '../lib/pd.js';
+import {readAllPorts, readPartnerPdos, pdoMaxWatts} from '../lib/pd.js';
 import {readUcsiSources, readBattery, acOnline} from '../lib/power.js';
 import {listUsbDevices, isIgnored} from '../lib/usb.js';
 import {UdevMonitor} from '../lib/udev.js';
+import {Notifier} from '../lib/notifier.js';
+import {SessionStats} from '../lib/session.js';
 
 export const Indicator = GObject.registerClass(
 class UsbPdIndicator extends PanelMenu.Button {
@@ -22,6 +24,11 @@ class UsbPdIndicator extends PanelMenu.Button {
         this._refreshBusy = false;
         this._snapshot = null;
         this._usbSig = null;
+        this._prevCharger = null; // Map portIndex → label (для diff-уведомлений)
+        this._prevUsb = null;     // Map name → dev
+
+        this._notifier = new Notifier();
+        this._session = new SessionStats();
 
         // --- панель ---
         this._box = new St.BoxLayout({style_class: 'panel-status-indicators-box'});
@@ -38,7 +45,7 @@ class UsbPdIndicator extends PanelMenu.Button {
         this._box.add_child(this._label);
         this.add_child(this._box);
 
-        // --- меню: header / ports / usb ---
+        // --- меню ---
         this._header = new PopupMenu.PopupMenuItem('USB & PD Monitor', {reactive: false});
         this.menu.addMenuItem(this._header);
         this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
@@ -51,6 +58,11 @@ class UsbPdIndicator extends PanelMenu.Button {
         this.menu.addMenuItem(this._usbTitle);
         this._usbSection = new PopupMenu.PopupMenuSection();
         this.menu.addMenuItem(this._usbSection);
+
+        this._statsSep = new PopupMenu.PopupSeparatorMenuItem();
+        this.menu.addMenuItem(this._statsSep);
+        this._statsItem = new PopupMenu.PopupMenuItem('', {reactive: false});
+        this.menu.addMenuItem(this._statsItem);
 
         this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
         const settingsItem = new PopupMenu.PopupMenuItem('Настройки');
@@ -75,7 +87,7 @@ class UsbPdIndicator extends PanelMenu.Button {
                 GLib.Source.remove(this._timerId);
                 this._timerId = 0;
             }
-            this._usbSig = null; // форс-перестройка списка USB
+            this._usbSig = null;
             this._render();
             this._ensurePolling();
         });
@@ -88,13 +100,17 @@ class UsbPdIndicator extends PanelMenu.Button {
             return;
         this._refreshBusy = true;
         try {
-            const [ports, sources, battery, ac] = await Promise.all([
-                readAllPorts(),
+            const ports = await readAllPorts();
+            const pdoMap = {};
+            await Promise.all(ports.filter(p => p.partner).map(async p => {
+                pdoMap[p.name] = await readPartnerPdos(p.name);
+            }));
+            const [sources, battery, ac] = await Promise.all([
                 readUcsiSources(),
                 readBattery(),
                 acOnline(),
             ]);
-            this._snapshot = {ports, sources, battery, ac};
+            this._snapshot = {ports, pdoMap, sources, battery, ac};
             this._render();
             this._ensurePolling();
         } catch (e) {
@@ -107,17 +123,20 @@ class UsbPdIndicator extends PanelMenu.Button {
     _render() {
         if (!this._snapshot)
             return;
-        const {ports, sources, battery, ac} = this._snapshot;
+        const {ports, pdoMap, sources, battery, ac} = this._snapshot;
 
         const onlineSources = sources.filter(s => s.online);
         const chargerWatts = onlineSources.reduce((a, s) => a + (s.watts ?? 0), 0);
         this._chargerActive = onlineSources.length > 0;
         const hasPartner = ports.some(p => p.partner);
 
-        // USB-устройства (живо из GUdev-клиента).
         const usbAll = this._udev?.client ? listUsbDevices(this._udev.client) : [];
         const ignore = this._settings.get_strv('hide-ignore-list');
         const externalUsb = usbAll.filter(d => d.external && !isIgnored(d, ignore));
+
+        // Сессия + уведомления.
+        this._session.update(chargerWatts, this._chargerActive);
+        this._diffNotify(onlineSources, pdoMap, usbAll);
 
         // Иконка.
         let iconName = 'media-removable-symbolic';
@@ -138,7 +157,7 @@ class UsbPdIndicator extends PanelMenu.Button {
         this._label.text = panelTxt;
         this._label.visible = panelTxt.length > 0;
 
-        // Видимость: внешнее = зарядник | partner | external-USB (не в ignore).
+        // Видимость.
         const hasExternal = this._chargerActive || hasPartner || externalUsb.length > 0;
         const hide = this._settings.get_boolean('hide-when-idle') && !hasExternal;
         this.container.visible = !hide;
@@ -146,22 +165,46 @@ class UsbPdIndicator extends PanelMenu.Button {
         // Заголовок.
         this._header.label.text = this._headerText(chargerWatts, battery);
 
-        // Порты (живые ватты — перестраиваем всегда).
+        // Порты (+ PDO submenu).
+        this._renderPorts(ports, pdoMap, sources);
+
+        // USB.
+        this._renderUsb(usbAll);
+
+        // Статистика сессии.
+        this._renderStats();
+    }
+
+    _renderPorts(ports, pdoMap, sources) {
         this._portSection.removeAll();
+        const showPdo = this._settings.get_boolean('show-pdo-list');
         for (const p of ports) {
             const idx = parseInt(p.name.replace('port', ''), 10);
             const src = sources.find(s => s.portIndex === idx && s.online);
             const pr = p.powerRole.active ?? '?';
             const dr = p.dataRole.active ?? '?';
-            let line = `USB-C ${p.name}  [${pr}/${dr}]`;
+            let title = `USB-C ${p.name}  [${pr}/${dr}]`;
             if (src && src.volts != null && src.amps != null)
-                line += `  ${src.volts.toFixed(1)}V·${src.amps.toFixed(2)}A·${Math.round(src.watts)}W`;
+                title += `  ${src.volts.toFixed(1)}V·${src.amps.toFixed(2)}A·${Math.round(src.watts)}W`;
             else
-                line += p.partner ? '  подключено' : '  idle';
-            this._portSection.addMenuItem(new PopupMenu.PopupMenuItem(line, {reactive: false}));
-        }
+                title += p.partner ? '  подключено' : '  idle';
 
-        this._renderUsb(usbAll);
+            const pdos = pdoMap[p.name] ?? [];
+            if (showPdo && p.partner && pdos.length) {
+                const item = new PopupMenu.PopupSubMenuMenuItem(title);
+                const negV = src?.volts ?? null;
+                for (const pdo of pdos) {
+                    let lbl = pdo.label;
+                    if (pdo.type === 'fixed_supply' && negV != null &&
+                        pdo.volts != null && Math.abs(pdo.volts - negV) < 0.6)
+                        lbl += '  ← активно';
+                    item.menu.addMenuItem(new PopupMenu.PopupMenuItem(lbl, {reactive: false}));
+                }
+                this._portSection.addMenuItem(item);
+            } else {
+                this._portSection.addMenuItem(new PopupMenu.PopupMenuItem(title, {reactive: false}));
+            }
+        }
     }
 
     _renderUsb(usbAll) {
@@ -180,7 +223,6 @@ class UsbPdIndicator extends PanelMenu.Button {
         const shown = scope === 'all' ? usbAll : usbAll.filter(d => d.external);
         this._usbTitle.label.text = `USB устройства (${shown.length})`;
 
-        // Список меняется редко → перестраиваем submenu только при смене состава.
         const sig = JSON.stringify(shown.map(d => [d.name, d.vidpid]));
         if (sig === this._usbSig)
             return;
@@ -212,6 +254,60 @@ class UsbPdIndicator extends PanelMenu.Button {
         return item;
     }
 
+    _renderStats() {
+        const show = this._settings.get_boolean('show-session-stats') && this._session.active;
+        this._statsSep.visible = show;
+        this._statsItem.visible = show;
+        if (!show)
+            return;
+        const d = this._session.durationSec;
+        const mm = Math.floor(d / 60);
+        const ss = Math.floor(d % 60);
+        this._statsItem.label.text =
+            `Сессия: пик ${this._session.peakW.toFixed(0)}W · сред ${this._session.avgW.toFixed(0)}W · ` +
+            `${mm}м ${ss}с · ${this._session.energyWh.toFixed(2)} Втч`;
+    }
+
+    _diffNotify(onlineSources, pdoMap, usbAll) {
+        const curCharger = new Map();
+        for (const s of onlineSources) {
+            const port = `port${s.portIndex}`;
+            const maxW = pdoMaxWatts(pdoMap[port] ?? []);
+            const w = maxW > 0 ? maxW : (s.watts ?? 0);
+            curCharger.set(s.portIndex, `${Math.round(w)}W`);
+        }
+        const curUsb = new Map(usbAll.map(d => [d.name, d]));
+
+        // Первый проход — только базлайн, без уведомлений о том, что уже воткнуто.
+        if (this._prevCharger !== null) {
+            if (this._settings.get_boolean('notify-charger')) {
+                for (const [idx, lbl] of curCharger) {
+                    if (!this._prevCharger.has(idx))
+                        this._notifier.notify('Зарядник подключён',
+                            `Порт ${idx} · ${lbl}`, 'battery-full-charging-symbolic');
+                }
+                for (const idx of this._prevCharger.keys()) {
+                    if (!curCharger.has(idx))
+                        this._notifier.notify('Зарядник отключён',
+                            `Порт ${idx}`, 'battery-missing-symbolic');
+                }
+            }
+            if (this._settings.get_boolean('notify-usb')) {
+                for (const [k, d] of curUsb) {
+                    if (!this._prevUsb.has(k))
+                        this._notifier.notify('USB подключено',
+                            `${d.title} · ${d.speed}`, 'media-removable-symbolic');
+                }
+                for (const [k, d] of this._prevUsb) {
+                    if (!curUsb.has(k))
+                        this._notifier.notify('USB отключено', d.title, 'media-removable-symbolic');
+                }
+            }
+        }
+        this._prevCharger = curCharger;
+        this._prevUsb = curUsb;
+    }
+
     _headerText(chargerWatts, battery) {
         if (this._chargerActive) {
             let s = `${battery?.charging ? 'Заряд' : 'Питание'} · ${chargerWatts.toFixed(1)} W`;
@@ -233,7 +329,7 @@ class UsbPdIndicator extends PanelMenu.Button {
         return 'Нет внешнего питания';
     }
 
-    // Polling только когда меню открыто ИЛИ идёт зарядка (живые ватты).
+    // Polling только когда меню открыто ИЛИ идёт зарядка (живые ватты + сессия).
     _ensurePolling() {
         const need = this._menuOpen || this._chargerActive;
         if (need && !this._timerId) {
@@ -262,6 +358,8 @@ class UsbPdIndicator extends PanelMenu.Button {
             this._settings.disconnect(this._settingsId);
             this._settingsId = 0;
         }
+        this._notifier?.destroy();
+        this._notifier = null;
         super.destroy();
     }
 });

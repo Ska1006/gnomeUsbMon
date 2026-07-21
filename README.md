@@ -12,8 +12,11 @@
 - **M2** — живые ватты (UCSI voltage×current), hotplug (GUdev), скорость заряда батареи, адаптивный polling, hide-when-idle.
 - **M3** — список USB-устройств + drill-down submenu (VID:PID, класс, скорость, драйвер, serial, порт), external/internal по `removable`, учёт external-USB в hide-when-idle.
 - **M4** — Adwaita-настройки (`prefs.js`): все тумблеры, режим панели, интервал, охват USB, ignore-list с живым списком внешних устройств. Пункт «Настройки» в меню.
+- **M5** — PDO-профили зарядника (submenu порта, подсветка активного), уведомления plug/unplug (зарядник/USB, diff prev↔cur), статистика сессии (пик/средняя/длительность/Втч).
 
-Дальше: M5 уведомления/PDO/статистика, M6 упаковка.
+Дальше: M6 упаковка (`gnome-extensions pack`), fixtures для офлайн-теста PDO.
+
+> PDO-парсинг закодирован по kernel `usb_power_delivery` ABI; финальная сверка имён полей — при воткнутом PD-заряднике.
 
 ## Установка (локально)
 
