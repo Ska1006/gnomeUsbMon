@@ -1,0 +1,13 @@
+{
+  "name": "gnome-usb-mon",
+  "version": "1.0.0",
+  "description": "GNOME Shell extension: USB & USB-C Power Delivery monitor",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "eslint": "^9.0.0"
+  }
+}
