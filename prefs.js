@@ -92,8 +92,6 @@ export default class GnomeUsbMonPrefs extends ExtensionPreferences {
         page.add(gFeat);
         gFeat.add(switchRow('PDO-профили', 'Submenu с профилями питания зарядника',
             settings, 'show-pdo-list'));
-        gFeat.add(switchRow('Статистика сессии', 'Пик/средняя мощность, длительность',
-            settings, 'show-session-stats'));
 
         // --- Игнор для авто-скрытия ---
         this._fillIgnoreGroup(page, settings);

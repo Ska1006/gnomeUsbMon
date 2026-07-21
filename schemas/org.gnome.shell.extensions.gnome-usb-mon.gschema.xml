@@ -56,9 +56,5 @@
       <default>true</default>
       <summary>Show charger PDO profiles submenu</summary>
     </key>
-    <key name="show-session-stats" type="b">
-      <default>true</default>
-      <summary>Show charging session stats</summary>
-    </key>
   </schema>
 </schemalist>

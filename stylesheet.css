@@ -1,1 +1,17 @@
-/* USB & PD Monitor — стили. Заполняется по мере роста UI (M4+). */
+/* USB & PD Monitor — лёгкие стили (без хардкода цветов, theme-safe). */
+
+/* Заголовок-сводка: чуть жирнее. */
+.umon-header {
+    font-weight: bold;
+}
+
+/* Заголовок секции («USB устройства»): приглушённый, мельче. */
+.umon-section-title {
+    font-weight: bold;
+    font-size: 0.85em;
+    padding-top: 6px;
+    padding-bottom: 2px;
+}
+.umon-section-title:disabled {
+    opacity: 0.75;
+}
