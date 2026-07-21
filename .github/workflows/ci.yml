@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install GJS + GLib tools
+        run: sudo apt-get update && sudo apt-get install -y gjs libglib2.0-bin
+      - name: Compile schema
+        run: make schemas
+      - name: Run tests (fixture + unit)
+        run: make test
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install eslint
+        run: npm install
+      - name: Lint
+        run: npx eslint .
