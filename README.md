@@ -8,9 +8,11 @@
 
 ## Статус
 
-**M1** — скелет: панельный индикатор + роли Type-C портов (sink/source, host/device) + флаг подключения зарядника. Читается из `/sys/class/typec/`.
+- **M1** — скелет: индикатор + роли Type-C портов, флаг подключения.
+- **M2** — живые ватты (UCSI voltage×current), hotplug (GUdev), скорость заряда батареи, адаптивный polling, hide-when-idle.
+- **M3** — список USB-устройств + drill-down submenu (VID:PID, класс, скорость, драйвер, serial, порт), external/internal по `removable`, учёт external-USB в hide-when-idle.
 
-Дальше: M2 живые ватты (UCSI + polling), M3 список USB, M4 настройки, M5 уведомления/PDO/статистика.
+Дальше: M4 настройки (Adwaita prefs + ignore-list UI), M5 уведомления/PDO/статистика, M6 упаковка.
 
 ## Установка (локально)
 
