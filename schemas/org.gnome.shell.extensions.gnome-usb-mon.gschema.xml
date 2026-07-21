@@ -30,11 +30,6 @@
       <summary>Devices ignored for idle-hide</summary>
       <description>VID:PID or class strings NOT counted as external.</description>
     </key>
-    <key name="poll-interval" type="i">
-      <range min="1" max="10"/>
-      <default>2</default>
-      <summary>Live poll interval (seconds)</summary>
-    </key>
     <key name="usb-list-mode" enum="org.gnome.shell.extensions.gnome-usb-mon.usb-list-mode">
       <default>'basic'</default>
       <summary>USB device list in menu</summary>
