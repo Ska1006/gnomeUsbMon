@@ -7,7 +7,7 @@ import {ExtensionPreferences} from 'resource:///org/gnome/Shell/Extensions/js/ex
 
 import {listUsbDevices} from './lib/usb.js';
 
-function comboRow(title, subtitle, settings, key, nicks, labels) {
+function comboRow(title, subtitle, settings, key, nicks, labels, handlers) {
     const row = new Adw.ComboRow({
         title,
         subtitle,
@@ -24,7 +24,8 @@ function comboRow(title, subtitle, settings, key, nicks, labels) {
         if (nick && nick !== settings.get_string(key))
             settings.set_string(key, nick);
     });
-    settings.connect(`changed::${key}`, sync);
+    // Сигнал на settings живёт дольше окна → регистрируем для disconnect при закрытии.
+    handlers.push(settings.connect(`changed::${key}`, sync));
     return row;
 }
 
@@ -37,6 +38,11 @@ function switchRow(title, subtitle, settings, key) {
 export default class GnomeUsbMonPrefs extends ExtensionPreferences {
     fillPreferencesWindow(window) {
         const settings = this.getSettings();
+        const handlers = [];
+        window.connect('destroy', () => {
+            for (const id of handlers)
+                settings.disconnect(id);
+        });
         const page = new Adw.PreferencesPage({
             title: 'Основное',
             icon_name: 'preferences-system-symbolic',
@@ -50,7 +56,7 @@ export default class GnomeUsbMonPrefs extends ExtensionPreferences {
             'Отображение', 'Что показывать в топ-баре',
             settings, 'panel-mode',
             ['icon-only', 'icon-watts', 'icon-watts-percent'],
-            ['Только иконка', 'Иконка + ватты', 'Иконка + ватты + %']));
+            ['Только иконка', 'Иконка + ватты', 'Иконка + ватты + %'], handlers));
         gPanel.add(switchRow(
             'Скрывать когда пусто', 'Прятать индикатор без внешних устройств',
             settings, 'hide-when-idle'));
@@ -72,12 +78,12 @@ export default class GnomeUsbMonPrefs extends ExtensionPreferences {
             'Показывать список', null,
             settings, 'usb-list-mode',
             ['basic', 'off'],
-            ['Базовый', 'Выкл']));
+            ['Базовый', 'Выкл'], handlers));
         gUsb.add(comboRow(
             'Охват', 'Только внешние (removable) или все устройства',
             settings, 'usb-list-scope',
             ['external', 'all'],
-            ['Только внешние', 'Все']));
+            ['Только внешние', 'Все'], handlers));
 
         // --- Уведомления ---
         const gNotify = new Adw.PreferencesGroup({title: 'Уведомления'});
