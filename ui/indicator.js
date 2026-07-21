@@ -24,6 +24,8 @@ class UsbPdIndicator extends PanelMenu.Button {
         this._refreshBusy = false;
         this._snapshot = null;
         this._usbSig = null;
+        this._portSig = null;
+        this._portRows = [];
         this._prevCharger = null; // Map portIndex → label (для diff-уведомлений)
         this._prevUsb = null;     // Map name → dev
 
@@ -88,6 +90,7 @@ class UsbPdIndicator extends PanelMenu.Button {
                 this._timerId = 0;
             }
             this._usbSig = null;
+            this._portSig = null;
             this._render();
             this._ensurePolling();
         });
@@ -175,23 +178,44 @@ class UsbPdIndicator extends PanelMenu.Button {
         this._renderStats();
     }
 
+    _portTitle(p, src) {
+        const pr = p.powerRole.active ?? '?';
+        const dr = p.dataRole.active ?? '?';
+        let t = `USB-C ${p.name}  [${pr}/${dr}]`;
+        if (src && src.volts != null && src.amps != null)
+            t += `  ${src.volts.toFixed(1)}V·${src.amps.toFixed(2)}A·${Math.round(src.watts)}W`;
+        else
+            t += p.partner ? '  подключено' : '  idle';
+        return t;
+    }
+
     _renderPorts(ports, pdoMap, sources) {
-        this._portSection.removeAll();
         const showPdo = this._settings.get_boolean('show-pdo-list');
+
+        // Структурная сигнатура (без живых ватт). Пока не меняется — submenu НЕ
+        // пересобираем, только обновляем ватты в label, иначе открытое меню схлопывается.
+        const sig = JSON.stringify(ports.map(p => {
+            const pdos = pdoMap[p.name] ?? [];
+            const pdoLabels = showPdo && p.partner && pdos.length ? pdos.map(x => x.label) : 0;
+            return [p.name, p.powerRole.active, p.dataRole.active, p.partner, pdoLabels];
+        }));
+        if (sig === this._portSig) {
+            this._updatePortLabels(ports, sources);
+            return;
+        }
+        this._portSig = sig;
+
+        this._portSection.removeAll();
+        this._portRows = [];
         for (const p of ports) {
             const idx = parseInt(p.name.replace('port', ''), 10);
             const src = sources.find(s => s.portIndex === idx && s.online);
-            const pr = p.powerRole.active ?? '?';
-            const dr = p.dataRole.active ?? '?';
-            let title = `USB-C ${p.name}  [${pr}/${dr}]`;
-            if (src && src.volts != null && src.amps != null)
-                title += `  ${src.volts.toFixed(1)}V·${src.amps.toFixed(2)}A·${Math.round(src.watts)}W`;
-            else
-                title += p.partner ? '  подключено' : '  idle';
-
+            const title = this._portTitle(p, src);
             const pdos = pdoMap[p.name] ?? [];
+
+            let item;
             if (showPdo && p.partner && pdos.length) {
-                const item = new PopupMenu.PopupSubMenuMenuItem(title);
+                item = new PopupMenu.PopupSubMenuMenuItem(title);
                 const negV = src?.volts ?? null;
                 for (const pdo of pdos) {
                     let lbl = pdo.label;
@@ -200,10 +224,21 @@ class UsbPdIndicator extends PanelMenu.Button {
                         lbl += '  ← активно';
                     item.menu.addMenuItem(new PopupMenu.PopupMenuItem(lbl, {reactive: false}));
                 }
-                this._portSection.addMenuItem(item);
             } else {
-                this._portSection.addMenuItem(new PopupMenu.PopupMenuItem(title, {reactive: false}));
+                item = new PopupMenu.PopupMenuItem(title, {reactive: false});
             }
+            this._portSection.addMenuItem(item);
+            this._portRows.push({item, portName: p.name, idx});
+        }
+    }
+
+    _updatePortLabels(ports, sources) {
+        for (const row of this._portRows) {
+            const p = ports.find(pp => pp.name === row.portName);
+            if (!p)
+                continue;
+            const src = sources.find(s => s.portIndex === row.idx && s.online);
+            row.item.label.text = this._portTitle(p, src);
         }
     }
 
