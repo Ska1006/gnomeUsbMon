@@ -5,14 +5,12 @@ import {Indicator} from './ui/indicator.js';
 
 export default class GnomeUsbMonExtension extends Extension {
     enable() {
-        this._settings = this.getSettings();
-        this._indicator = new Indicator(this._settings);
+        this._indicator = new Indicator(this);
         Main.panel.addToStatusArea(this.uuid, this._indicator);
     }
 
     disable() {
         this._indicator?.destroy();
         this._indicator = null;
-        this._settings = null;
     }
 }
