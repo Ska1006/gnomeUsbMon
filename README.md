@@ -1,90 +1,96 @@
 # USB & PD Monitor (GNOME Shell)
 
+**English** · [Русский](README.ru.md)
+
 ![CI](https://github.com/Ska1006/gnomeUsbMon/actions/workflows/ci.yml/badge.svg)
 
-Состояние подключённых USB-устройств и USB-C **Power Delivery** зарядников: негоциированные ватты, PDO-профили, роли портов, скорость заряда батареи.
+Monitor connected USB devices and USB-C **Power Delivery** chargers: negotiated watts, PDO profiles, port roles, battery charge rate.
 
-- Полная спека: [SPEC.md](SPEC.md)
+- Full spec: [SPEC.md](SPEC.md)
 - UUID: `gnome-usb-mon@ska1006.github.io`
-- GNOME Shell **50** · Wayland/X11 · root не требуется
+- GNOME Shell **50** · Wayland/X11 · no root required
 
-## Внешний вид
+## Appearance
 
 ```
  top bar:  ⚡65W ▾
 ┌────────────────────────────────────────┐
-│ ⚡ Заряд · 92% · PD 65W                 │
+│ ⚡ Charging · 92% · PD 65W              │
 │ ────────────────────────────────────── │
 │ ⚡ USB-C port0  [sink/host]  20V·3.25A·65W ▸│  ← PDO submenu
 │      5.0V · 3.00A · 15W                 │
 │      …                                  │
-│      20.0V · 3.25A · 65W  ← активно     │
+│      20.0V · 3.25A · 65W  ← active      │
 │ ▪ USB-C port1  [sink/device]  idle      │
 │ ────────────────────────────────────── │
-│ USB устройства (2)                      │
+│ USB devices (2)                         │
 │ 🖴 SanDisk Ultra        5G          ▸    │  ← drill-down
 │ ⌨ Logitech Receiver    1.5M        ▸    │
 │ ────────────────────────────────────── │
-│ ⚙ Настройки                            │
+│ ⚙ Settings                             │
 └────────────────────────────────────────┘
 ```
-(иконки — symbolic из Adwaita; эмодзи здесь только для схемы)
+(icons are Adwaita symbolic; the emoji here are only for the sketch)
 
-## Возможности
+## Features
 
-- **PD-зарядники**: негоциированный контракт (V·A·W), PDO-профили в submenu с подсветкой активного, максимальная мощность.
-- **Type-C порты**: роли `sink/source` и `host/device`, наличие партнёра.
-- **USB-устройства**: список с drill-down (VID:PID, класс, скорость, драйвер, serial, порт, `bMaxPower`); external/internal по sysfs `removable`.
-- **Панель**: иконка по состоянию (зарядник / устройство / питание) + ватты; авто-скрытие когда нет внешних устройств (с настраиваемым ignore-list).
-- **Уведомления** plug/unplug зарядника и USB.
-- **Настройки** (Adwaita): режим панели, охват списка USB, тумблеры уведомлений/PDO, ignore-list с живым списком устройств.
+- **PD chargers**: negotiated contract (V·A·W), PDO profiles in a submenu with the active one highlighted, maximum power.
+- **Type-C ports**: `sink/source` and `host/device` roles, partner presence.
+- **USB devices**: list with drill-down (VID:PID, class, speed, driver, serial, port, `bMaxPower`); external/internal via sysfs `removable`.
+- **Panel**: state icon (charger / device / powered) + watts; auto-hide when there are no external devices (with a configurable ignore list).
+- **Notifications** on charger/USB plug and unplug.
+- **Settings** (Adwaita): panel mode, USB list scope, notification/PDO toggles, ignore list with a live device list.
 
-Всё через sysfs (`typec`, `power_supply`) + GUdev — **root не требуется**. PDO-парсинг покрыт офлайн-тестами на sysfs-фикстуре.
+Everything through sysfs (`typec`, `power_supply`) + GUdev — **no root required**. PDO parsing is covered by offline tests on a sysfs fixture.
 
-## Установка (локально)
+## Install (local)
 
 ```sh
 make install
-# Wayland: перелогиниться, затем:
+# Wayland: log out and back in, then:
 gnome-extensions enable gnome-usb-mon@ska1006.github.io
 ```
 
-## Разработка
+## Development
 
 ```sh
-make test               # офлайн-тест парсинга PD/PSY на фикстуре
-make pack               # собрать .shell-extension.zip
-make reload-nested      # вложенный gnome-shell --nested (без перелогина)
-journalctl -f -o cat /usr/bin/gnome-shell   # логи расширения
+make test               # offline PD/PSY parsing test on a fixture
+make pack               # build the .shell-extension.zip
+make reload-nested      # nested gnome-shell --nested (no relogin)
+journalctl -f -o cat /usr/bin/gnome-shell   # extension logs
 ```
 
-Dev-режим с фикстурами sysfs (тест парсинга без реального железа):
+Dev mode with sysfs fixtures (parse without real hardware):
 
 ```sh
-./fixtures/gen.sh       # создать fixtures/charger-100w/ (мок «воткнут 100W»)
+./fixtures/gen.sh       # create fixtures/charger-100w/ (a "100W plugged" mock)
 GNOME_USB_MON_SYSFS_ROOT=fixtures/charger-100w gjs -m tests/pdo-test.js
 ```
 
-`GNOME_USB_MON_SYSFS_ROOT` подменяет корень sysfs → любой lib-модуль читает из фикстуры.
+`GNOME_USB_MON_SYSFS_ROOT` overrides the sysfs root → every lib module reads from the fixture.
 
-### Переводы (i18n)
+### Translations (i18n)
 
-Исходные строки — на английском (`_()`), переводы в `po/`.
-Языки: `de fr es ru zh_CN pt_BR it pl ja` (+ английский-исходник).
+Source strings are English (`_()`), translations live in `po/`.
+Languages: `de fr es ru zh_CN pt_BR it pl ja` (+ the English source).
 
 ```sh
-make pot                # обновить po/gnome-usb-mon.pot из кода
-make mo                 # скомпилировать po/*.po → locale/<lang>/LC_MESSAGES/*.mo
+make pot                # refresh po/gnome-usb-mon.pot from the code
+make mo                 # compile po/*.po → locale/<lang>/LC_MESSAGES/*.mo
 ```
 
-`make install` собирает `.mo` и кладёт `locale/` в расширение. Новый язык — скопировать `.pot` в `po/<lang>.po`, перевести, `make install`.
+`make install` compiles the `.mo` files and ships `locale/`. New language: copy the `.pot` to `po/<lang>.po`, translate, `make install`.
 
-## Структура
+## Structure
 
 ```
 extension.js        enable/disable
-lib/sysfs.js        async-чтение sysfs
-lib/pd.js           typec порты / PD
-ui/indicator.js     панельный индикатор + меню
+lib/sysfs.js        async sysfs reads
+lib/pd.js           typec ports / PD
+ui/indicator.js     panel indicator + menu
 schemas/            GSettings
 ```
+
+## License
+
+GPL-2.0-or-later — see [LICENSE](LICENSE).
