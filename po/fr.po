@@ -1,0 +1,160 @@
+# French translation for gnome-usb-mon.
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-usb-mon 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2026-07-22\n"
+"Last-Translator: \n"
+"Language-Team: French\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "active"
+msgstr "actif"
+
+msgid "Advanced"
+msgstr "Avancé"
+
+msgid "All"
+msgstr "Tous"
+
+msgid "Basic"
+msgstr "Simple"
+
+msgid "Battery"
+msgstr "Batterie"
+
+msgid "Charger"
+msgstr "Chargeur"
+
+msgid "Charger connected"
+msgstr "Chargeur connecté"
+
+msgid "Charger disconnected"
+msgstr "Chargeur déconnecté"
+
+msgid "Charging"
+msgstr "En charge"
+
+msgid "Class"
+msgstr "Classe"
+
+msgid "connected"
+msgstr "connecté"
+
+msgid "Discharging"
+msgstr "En décharge"
+
+msgid "Display"
+msgstr "Affichage"
+
+msgid "Driver"
+msgstr "Pilote"
+
+msgid "External devices that should NOT show the indicator"
+msgstr "Périphériques externes qui NE doivent PAS afficher l'indicateur"
+
+msgid "External only"
+msgstr "Externes uniquement"
+
+msgid "External (removable) only, or all devices"
+msgstr "Externes (removable) uniquement, ou tous les périphériques"
+
+msgid "General"
+msgstr "Général"
+
+msgid "Hide the indicator when there are no external devices"
+msgstr "Masquer l'indicateur en l'absence de périphériques externes"
+
+msgid "Hide when empty"
+msgstr "Masquer si vide"
+
+msgid "Icon only"
+msgstr "Icône uniquement"
+
+msgid "Icon + watts + %"
+msgstr "Icône + watts + %"
+
+msgid "Icon + watts"
+msgstr "Icône + watts"
+
+msgid "Ignore for auto-hide"
+msgstr "Ignorer pour le masquage automatique"
+
+msgid "Max current"
+msgstr "Courant max."
+
+msgid "no devices"
+msgstr "aucun périphérique"
+
+msgid "no external devices"
+msgstr "aucun périphérique externe"
+
+msgid "No external devices"
+msgstr "Aucun périphérique externe"
+
+msgid "No external power"
+msgstr "Aucune alimentation externe"
+
+msgid "Notifications"
+msgstr "Notifications"
+
+msgid "Off"
+msgstr "Désactivé"
+
+msgid "Other USB devices plug/unplug"
+msgstr "Branchement/débranchement des autres périphériques USB"
+
+msgid "Panel"
+msgstr "Barre"
+
+msgid "PD charger plug/unplug"
+msgstr "Branchement/débranchement du chargeur PD"
+
+msgid "PDO profiles"
+msgstr "Profils PDO"
+
+msgid "Plug a device and reopen settings"
+msgstr "Branchez un périphérique et rouvrez les paramètres"
+
+msgid "Port"
+msgstr "Port"
+
+msgid "Powered"
+msgstr "Alimenté"
+
+msgid "Scope"
+msgstr "Portée"
+
+msgid "Settings"
+msgstr "Paramètres"
+
+msgid "Show list"
+msgstr "Afficher la liste"
+
+msgid "Speed"
+msgstr "Vitesse"
+
+msgid "Submenu with charger power profiles"
+msgstr "Sous-menu avec les profils d'alimentation du chargeur"
+
+msgid "Type"
+msgstr "Type"
+
+msgid "USB connected"
+msgstr "USB connecté"
+
+msgid "USB devices"
+msgstr "Périphériques USB"
+
+msgid "USB disconnected"
+msgstr "USB déconnecté"
+
+msgid "USB list"
+msgstr "Liste USB"
+
+msgid "What to show in the top bar"
+msgstr "Ce qui est affiché dans la barre supérieure"

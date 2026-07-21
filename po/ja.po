@@ -1,0 +1,160 @@
+# Japanese translation for gnome-usb-mon.
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-usb-mon 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2026-07-22\n"
+"Last-Translator: \n"
+"Language-Team: Japanese\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "active"
+msgstr "使用中"
+
+msgid "Advanced"
+msgstr "詳細"
+
+msgid "All"
+msgstr "すべて"
+
+msgid "Basic"
+msgstr "基本"
+
+msgid "Battery"
+msgstr "バッテリー"
+
+msgid "Charger"
+msgstr "充電器"
+
+msgid "Charger connected"
+msgstr "充電器が接続されました"
+
+msgid "Charger disconnected"
+msgstr "充電器が切断されました"
+
+msgid "Charging"
+msgstr "充電中"
+
+msgid "Class"
+msgstr "クラス"
+
+msgid "connected"
+msgstr "接続済み"
+
+msgid "Discharging"
+msgstr "放電中"
+
+msgid "Display"
+msgstr "表示"
+
+msgid "Driver"
+msgstr "ドライバー"
+
+msgid "External devices that should NOT show the indicator"
+msgstr "インジケーターを表示しない外部デバイス"
+
+msgid "External only"
+msgstr "外部のみ"
+
+msgid "External (removable) only, or all devices"
+msgstr "外部（removable）のみ、またはすべてのデバイス"
+
+msgid "General"
+msgstr "全般"
+
+msgid "Hide the indicator when there are no external devices"
+msgstr "外部デバイスがないときにインジケーターを隠す"
+
+msgid "Hide when empty"
+msgstr "空のときに隠す"
+
+msgid "Icon only"
+msgstr "アイコンのみ"
+
+msgid "Icon + watts + %"
+msgstr "アイコン + ワット + %"
+
+msgid "Icon + watts"
+msgstr "アイコン + ワット"
+
+msgid "Ignore for auto-hide"
+msgstr "自動非表示で無視する"
+
+msgid "Max current"
+msgstr "最大電流"
+
+msgid "no devices"
+msgstr "デバイスなし"
+
+msgid "no external devices"
+msgstr "外部デバイスなし"
+
+msgid "No external devices"
+msgstr "外部デバイスなし"
+
+msgid "No external power"
+msgstr "外部電源なし"
+
+msgid "Notifications"
+msgstr "通知"
+
+msgid "Off"
+msgstr "オフ"
+
+msgid "Other USB devices plug/unplug"
+msgstr "その他の USB デバイスの接続/切断"
+
+msgid "Panel"
+msgstr "パネル"
+
+msgid "PD charger plug/unplug"
+msgstr "PD 充電器の接続/切断"
+
+msgid "PDO profiles"
+msgstr "PDO プロファイル"
+
+msgid "Plug a device and reopen settings"
+msgstr "デバイスを接続して設定を開き直してください"
+
+msgid "Port"
+msgstr "ポート"
+
+msgid "Powered"
+msgstr "給電中"
+
+msgid "Scope"
+msgstr "範囲"
+
+msgid "Settings"
+msgstr "設定"
+
+msgid "Show list"
+msgstr "リストを表示"
+
+msgid "Speed"
+msgstr "速度"
+
+msgid "Submenu with charger power profiles"
+msgstr "充電器の給電プロファイルのサブメニュー"
+
+msgid "Type"
+msgstr "種類"
+
+msgid "USB connected"
+msgstr "USB が接続されました"
+
+msgid "USB devices"
+msgstr "USB デバイス"
+
+msgid "USB disconnected"
+msgstr "USB が切断されました"
+
+msgid "USB list"
+msgstr "USB リスト"
+
+msgid "What to show in the top bar"
+msgstr "トップバーに表示する内容"

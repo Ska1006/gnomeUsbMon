@@ -1,0 +1,160 @@
+# Simplified Chinese translation for gnome-usb-mon.
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-usb-mon 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2026-07-22\n"
+"Last-Translator: \n"
+"Language-Team: Simplified Chinese\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "active"
+msgstr "使用中"
+
+msgid "Advanced"
+msgstr "高级"
+
+msgid "All"
+msgstr "全部"
+
+msgid "Basic"
+msgstr "基本"
+
+msgid "Battery"
+msgstr "电池"
+
+msgid "Charger"
+msgstr "充电器"
+
+msgid "Charger connected"
+msgstr "充电器已连接"
+
+msgid "Charger disconnected"
+msgstr "充电器已断开"
+
+msgid "Charging"
+msgstr "充电中"
+
+msgid "Class"
+msgstr "类别"
+
+msgid "connected"
+msgstr "已连接"
+
+msgid "Discharging"
+msgstr "放电中"
+
+msgid "Display"
+msgstr "显示"
+
+msgid "Driver"
+msgstr "驱动"
+
+msgid "External devices that should NOT show the indicator"
+msgstr "不应显示指示器的外部设备"
+
+msgid "External only"
+msgstr "仅外部"
+
+msgid "External (removable) only, or all devices"
+msgstr "仅外部（removable）或全部设备"
+
+msgid "General"
+msgstr "常规"
+
+msgid "Hide the indicator when there are no external devices"
+msgstr "没有外部设备时隐藏指示器"
+
+msgid "Hide when empty"
+msgstr "空闲时隐藏"
+
+msgid "Icon only"
+msgstr "仅图标"
+
+msgid "Icon + watts + %"
+msgstr "图标 + 瓦特 + %"
+
+msgid "Icon + watts"
+msgstr "图标 + 瓦特"
+
+msgid "Ignore for auto-hide"
+msgstr "自动隐藏时忽略"
+
+msgid "Max current"
+msgstr "最大电流"
+
+msgid "no devices"
+msgstr "无设备"
+
+msgid "no external devices"
+msgstr "无外部设备"
+
+msgid "No external devices"
+msgstr "无外部设备"
+
+msgid "No external power"
+msgstr "无外部电源"
+
+msgid "Notifications"
+msgstr "通知"
+
+msgid "Off"
+msgstr "关闭"
+
+msgid "Other USB devices plug/unplug"
+msgstr "其他 USB 设备的插入/拔出"
+
+msgid "Panel"
+msgstr "面板"
+
+msgid "PD charger plug/unplug"
+msgstr "PD 充电器插入/拔出"
+
+msgid "PDO profiles"
+msgstr "PDO 配置"
+
+msgid "Plug a device and reopen settings"
+msgstr "插入设备后重新打开设置"
+
+msgid "Port"
+msgstr "端口"
+
+msgid "Powered"
+msgstr "已供电"
+
+msgid "Scope"
+msgstr "范围"
+
+msgid "Settings"
+msgstr "设置"
+
+msgid "Show list"
+msgstr "显示列表"
+
+msgid "Speed"
+msgstr "速度"
+
+msgid "Submenu with charger power profiles"
+msgstr "充电器供电配置子菜单"
+
+msgid "Type"
+msgstr "类型"
+
+msgid "USB connected"
+msgstr "USB 已连接"
+
+msgid "USB devices"
+msgstr "USB 设备"
+
+msgid "USB disconnected"
+msgstr "USB 已断开"
+
+msgid "USB list"
+msgstr "USB 列表"
+
+msgid "What to show in the top bar"
+msgstr "顶栏显示内容"
