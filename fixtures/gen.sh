@@ -20,15 +20,16 @@ w "$TC/port0/power_operation_mode" "usb_power_delivery"
 w "$TC/port0/usb_power_delivery_revision" "3.0"
 w "$TC/port0/orientation" "normal"
 
-# PDO зарядника (source-capabilities партнёра): mV / mA.
-SC="$TC/port0-partner/usb_power_delivery/source-capabilities"
-w "$SC/1:fixed_supply/voltage" "5000";  w "$SC/1:fixed_supply/maximum_current" "3000"
-w "$SC/2:fixed_supply/voltage" "9000";  w "$SC/2:fixed_supply/maximum_current" "3000"
-w "$SC/3:fixed_supply/voltage" "15000"; w "$SC/3:fixed_supply/maximum_current" "3000"
-w "$SC/4:fixed_supply/voltage" "20000"; w "$SC/4:fixed_supply/maximum_current" "5000"
-w "$SC/5:programmable_supply/minimum_voltage" "3300"
-w "$SC/5:programmable_supply/maximum_voltage" "21000"
-w "$SC/5:programmable_supply/maximum_current" "5000"
+# PDO зарядника: реальный layout ядра — partner/pdN/source-capabilities,
+# значения с суффиксами (5000mV / 3000mA), как в живом sysfs.
+SC="$TC/port0-partner/pd2/source-capabilities"
+w "$SC/1:fixed_supply/voltage" "5000mV";  w "$SC/1:fixed_supply/maximum_current" "3000mA"
+w "$SC/2:fixed_supply/voltage" "9000mV";  w "$SC/2:fixed_supply/maximum_current" "3000mA"
+w "$SC/3:fixed_supply/voltage" "15000mV"; w "$SC/3:fixed_supply/maximum_current" "3000mA"
+w "$SC/4:fixed_supply/voltage" "20000mV"; w "$SC/4:fixed_supply/maximum_current" "5000mA"
+w "$SC/5:programmable_supply/minimum_voltage" "3300mV"
+w "$SC/5:programmable_supply/maximum_voltage" "21000mV"
+w "$SC/5:programmable_supply/maximum_current" "5000mA"
 
 # port1: idle sink, партнёра нет.
 w "$TC/port1/power_role" "source [sink]"

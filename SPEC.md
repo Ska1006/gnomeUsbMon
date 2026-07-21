@@ -49,8 +49,8 @@
 - `usb_power_delivery_revision`, `orientation`
 
 ### 2.3 Партнёр (зарядник) при подключении
-Появляется `/sys/class/typec/portN-partner/` (сейчас нет — зарядник не воткнут):
-- `usb_power_delivery/source-capabilities/` — **PDO зарядника**:
+Появляется `/sys/class/typec/portN-partner/`:
+- `pdN/source-capabilities/` (номер `pdN` варьируется; старые ядра — `usb_power_delivery/source-capabilities/`) — **PDO зарядника**. Значения с суффиксами `mV`/`mA`:
   - `K:fixed_supply/` → `voltage` (mV), `maximum_current` (mA), `operational_current`, `dual_role_power`, `usb_communication_capable`, `unconstrained_power`
   - `K:programmable_supply/` (**PPS/APDO**) → `maximum_voltage`, `minimum_voltage`, `maximum_current`
   - `K:variable_supply/` / `K:battery/` → min/max voltage, max current/power
