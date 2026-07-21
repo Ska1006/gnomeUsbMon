@@ -108,7 +108,6 @@ USB devices                          ← базовый список (usb-list-m
   Logitech Receiver        1.5M      → клик = submenu (полная инфа)
   SanDisk Ultra            5G
 ──────────────────────────────
-Session: peak 60W · avg 42W · 12 min ← если show-session-stats
 ⚙ Settings
 ```
 
@@ -150,7 +149,6 @@ SanDisk Ultra
 | `notify-charger` | bool | `true` | уведомления plug/unplug зарядника |
 | `notify-usb` | bool | `false` | уведомления plug/unplug прочих USB |
 | `show-pdo-list` | bool | `true` | submenu с PDO-профилями зарядника |
-| `show-session-stats` | bool | `true` | статистика текущей сессии заряда |
 
 **`hide-ignore-list`**: при `hide-when-idle` индикатор виден, если есть хоть одно внешнее устройство, НЕ входящее в этот список. В prefs — список USB-устройств с чекбоксами «игнорировать» (по VID:PID) + пресеты по классу (напр. HID-ресиверы). Root-hubs всегда игнорируются.
 
@@ -161,8 +159,7 @@ SanDisk Ultra
 ## 6. Доп-функции (детали)
 
 - **Уведомления** (`MessageTray`): partner add → «Зарядник подключён: UGREEN 100W (max 20V·5A)»; remove → «Зарядник отключён». USB add/remove — по отдельному тумблеру, с дебаунсом от спама.
-- **Статистика сессии** (in-memory, без персиста): по `online` 0→1 — старт таймера, сэмплы ватт каждый poll → peak / avg / накопленные Wh / длительность. Сброс при отключении.
-- **История/график** — НЕ в scope (не выбрано). Заложить hook на будущее, не реализовывать.
+- **История/график** — НЕ в scope (не выбрано).
 
 ---
 
@@ -192,7 +189,7 @@ gnome-usb-mon@typoska.github.io/
 │   ├── udev.js               # GUdev.Client + hotplug-сигналы
 │   ├── pd.js                 # парсинг typec / partner / PDO / ucsi-psy
 │   ├── usb.js                # enumeration USB-устройств
-│   ├── power.js              # батарея/AC/ватты, session-stats
+│   ├── power.js              # батарея/AC/ватты
 │   └── notifier.js           # уведомления
 ├── ui/
 │   ├── indicator.js          # PanelMenu.Button + панель-режимы
@@ -232,7 +229,7 @@ GNOME 50 → ESM: `import Gio from 'gi://Gio'`, `export default class extends Ex
 2. **M2 live PD** — GUdev hotplug + polling, живые ватты, скорость заряда.
 3. **M3 USB list** — enumeration + базовый список + drill-down submenu.
 4. **M4 prefs** — Adwaita-настройки, все тумблеры, panel-режимы, hide-when-idle.
-5. **M5 доп** — уведомления, PDO submenu, session-stats.
+5. **M5 доп** — уведомления, PDO submenu.
 6. **M6 polish** — graceful degrade, фикстуры/тесты, упаковка (zip, install).
 
 ---
