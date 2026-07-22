@@ -27,7 +27,6 @@ function comboRow(title, subtitle, settings, key, nicks, labels, handlers) {
         if (nick && nick !== settings.get_string(key))
             settings.set_string(key, nick);
     });
-    // Сигнал на settings живёт дольше окна → регистрируем для disconnect при закрытии.
     handlers.push(settings.connect(`changed::${key}`, sync));
     return row;
 }
@@ -42,9 +41,11 @@ export default class GnomeUsbMonPrefs extends ExtensionPreferences {
     fillPreferencesWindow(window) {
         const settings = this.getSettings();
         const handlers = [];
-        window.connect('destroy', () => {
+        // settings outlives the window; disconnect on close
+        window.connect('close-request', () => {
             for (const id of handlers)
                 settings.disconnect(id);
+            return false;
         });
         const page = new Adw.PreferencesPage({
             title: _('General'),
@@ -92,7 +93,7 @@ export default class GnomeUsbMonPrefs extends ExtensionPreferences {
         gFeat.add(switchRow(_('PDO profiles'), _('Submenu with charger power profiles'),
             settings, 'show-pdo-list'));
 
-        // --- Игнор для авто-скрытия ---
+        // --- Ignore for auto-hide ---
         this._fillIgnoreGroup(page, settings);
     }
 

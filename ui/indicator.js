@@ -12,11 +12,10 @@ import {UdevMonitor} from '../lib/udev.js';
 import {Notifier} from '../lib/notifier.js';
 
 import * as ExtMod from 'resource:///org/gnome/shell/extensions/extension.js';
-// gettext домена расширения; fallback-identity если экспорт недоступен.
+// gettext with identity fallback
 const _ = ExtMod.gettext ?? (s => s);
 
-// Период опроса живых значений при активной зарядке (сек). Значения почти
-// не меняются в рамках контракта, поэтому фикс — настройка не нужна.
+// live-value poll interval while charging (seconds)
 const POLL_SECONDS = 2;
 
 export const Indicator = GObject.registerClass(
@@ -35,12 +34,12 @@ class UsbPdIndicator extends PanelMenu.Button {
         this._usbSig = null;
         this._portSig = null;
         this._portRows = [];
-        this._prevCharger = null; // Map portIndex → label (для diff-уведомлений)
+        this._prevCharger = null; // Map portIndex → label
         this._prevUsb = null;     // Map name → dev
 
         this._notifier = new Notifier();
 
-        // --- панель ---
+        // panel
         this._box = new St.BoxLayout({style_class: 'panel-status-indicators-box'});
         this._icon = new St.Icon({
             icon_name: 'media-removable-symbolic',
@@ -55,7 +54,7 @@ class UsbPdIndicator extends PanelMenu.Button {
         this._box.add_child(this._label);
         this.add_child(this._box);
 
-        // --- меню ---
+        // menu
         this._header = new PopupMenu.PopupImageMenuItem('USB & PD Monitor',
             'media-removable-symbolic', {reactive: false});
         this._header.add_style_class_name('umon-header');
@@ -85,12 +84,12 @@ class UsbPdIndicator extends PanelMenu.Button {
                 this._ensurePolling();
         });
 
-        // --- hotplug ---
+        // hotplug
         this._udev = new UdevMonitor();
-        this._udevId = this._udev.connect('changed', () => this._scheduleRefresh());
+        this._udev.connectObject('changed', () => this._scheduleRefresh(), this);
 
-        // --- настройки ---
-        this._settingsId = this._settings.connect('changed', () => {
+        // settings
+        this._settings.connectObject('changed', () => {
             if (this._timerId) {
                 GLib.Source.remove(this._timerId);
                 this._timerId = 0;
@@ -99,13 +98,13 @@ class UsbPdIndicator extends PanelMenu.Button {
             this._portSig = null;
             this._render();
             this._ensurePolling();
-        });
+        }, this);
 
         this.refresh();
     }
 
-    // Коалесцируем всплески udev-событий (plug → пачка uevent) в один refresh.
     _scheduleRefresh() {
+        // coalesce udev event bursts into one refresh
         if (this._coalesceId)
             return;
         this._coalesceId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 200, () => {
@@ -116,7 +115,7 @@ class UsbPdIndicator extends PanelMenu.Button {
     }
 
     async refresh() {
-        // Не дропаем наложенный вызов — помечаем pending и до-рефрешим после.
+        // don't drop an overlapping call — mark pending and re-run after
         if (this._refreshBusy) {
             this._refreshPending = true;
             return;
@@ -161,25 +160,25 @@ class UsbPdIndicator extends PanelMenu.Button {
         const ignore = this._settings.get_strv('hide-ignore-list');
         const externalUsb = usbAll.filter(d => d.external && !isIgnored(d, ignore));
 
-        // Уведомления plug/unplug.
+        // plug/unplug notifications
         this._diffNotify(onlineSources, pdoMap, usbAll);
 
-        // Иконка панели + шапки по состоянию.
+        // panel + header icon by state
         const deviceConnected = externalUsb.length > 0 || hasPartner;
         let iconName;
         if (this._chargerActive || battery?.charging)
-            iconName = 'battery-full-charging-symbolic';   // зарядник / идёт заряд
+            iconName = 'battery-full-charging-symbolic';   // charger / charging
         else if (deviceConnected)
-            iconName = 'drive-harddisk-usb-symbolic';      // подключено НЕ-зарядное устройство
+            iconName = 'drive-harddisk-usb-symbolic';      // non-charging device
         else if (ac)
-            iconName = 'ac-adapter-symbolic';              // внешнее питание без PD
+            iconName = 'ac-adapter-symbolic';              // external power, no PD
         else
             iconName = 'media-removable-symbolic';
         this._icon.icon_name = iconName;
         if (this._header.setIcon)
             this._header.setIcon(iconName);
 
-        // Метка панели.
+        // panel label
         const mode = this._settings.get_string('panel-mode');
         let panelTxt = '';
         if (mode !== 'icon-only' && this._chargerActive) {
@@ -190,18 +189,18 @@ class UsbPdIndicator extends PanelMenu.Button {
         this._label.text = panelTxt;
         this._label.visible = panelTxt.length > 0;
 
-        // Видимость.
+        // visibility
         const hasExternal = this._chargerActive || hasPartner || externalUsb.length > 0;
         const hide = this._settings.get_boolean('hide-when-idle') && !hasExternal;
         this.container.visible = !hide;
 
-        // Заголовок.
+        // header
         this._header.label.text = this._headerText(chargerWatts, battery);
 
-        // Порты (+ PDO submenu).
+        // ports (+ PDO submenu)
         this._renderPorts(ports, pdoMap, sources);
 
-        // USB.
+        // USB
         this._renderUsb(usbAll);
     }
 
@@ -219,8 +218,8 @@ class UsbPdIndicator extends PanelMenu.Button {
     _renderPorts(ports, pdoMap, sources) {
         const showPdo = this._settings.get_boolean('show-pdo-list');
 
-        // Структурная сигнатура (без живых ватт). Пока не меняется — submenu НЕ
-        // пересобираем, только обновляем ватты в label, иначе открытое меню схлопывается.
+        // structural signature (no live watts): while unchanged, only update the
+        // label watts instead of rebuilding — rebuilding collapses an open submenu
         const sig = JSON.stringify(ports.map(p => {
             const idx = parseInt(p.name.replace('port', ''), 10);
             const online = sources.some(s => s.portIndex === idx && s.online);
@@ -304,9 +303,9 @@ class UsbPdIndicator extends PanelMenu.Button {
 
     _portIcon(p, src) {
         if (src)
-            return 'battery-full-charging-symbolic'; // активный PD-source
+            return 'battery-full-charging-symbolic'; // active PD source
         if (p.partner)
-            return 'drive-harddisk-usb-symbolic';    // устройство, но не заряжает
+            return 'drive-harddisk-usb-symbolic';    // device, not charging
         return 'media-removable-symbolic';           // idle
     }
 
@@ -338,7 +337,7 @@ class UsbPdIndicator extends PanelMenu.Button {
         }
         const curUsb = new Map(usbAll.map(d => [d.name, d]));
 
-        // Первый проход — только базлайн, без уведомлений о том, что уже воткнуто.
+        // first pass only baselines — no notifications for already-plugged devices
         if (this._prevCharger !== null) {
             if (this._settings.get_boolean('notify-charger')) {
                 for (const [idx, lbl] of curCharger) {
@@ -370,7 +369,7 @@ class UsbPdIndicator extends PanelMenu.Button {
 
     _headerText(chargerWatts, battery) {
         if (this._chargerActive) {
-            const pd = `PD ${chargerWatts.toFixed(0)}W`; // контракт (потолок), не живой замер
+            const pd = `PD ${chargerWatts.toFixed(0)}W`; // contract ceiling, not a live measurement
             let s = battery?.charging ? _('Charging') : _('Powered');
             if (battery?.capacity != null)
                 s += ` · ${battery.capacity}%`;
@@ -388,9 +387,8 @@ class UsbPdIndicator extends PanelMenu.Button {
         return _('No external power');
     }
 
-    // Polling только при зарядке (живые ватты). Структурные изменения при
-    // открытом меню ловит udev, поэтому menuOpen для опроса не нужен.
     _ensurePolling() {
+        // poll only while charging (live watts); udev catches structural changes
         const need = this._chargerActive;
         if (need && !this._timerId) {
             this._timerId = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, POLL_SECONDS, () => {
@@ -413,14 +411,11 @@ class UsbPdIndicator extends PanelMenu.Button {
             this._coalesceId = 0;
         }
         if (this._udev) {
-            this._udev.disconnect(this._udevId);
+            this._udev.disconnectObject(this);
             this._udev.destroy();
             this._udev = null;
         }
-        if (this._settingsId) {
-            this._settings.disconnect(this._settingsId);
-            this._settingsId = 0;
-        }
+        this._settings.disconnectObject(this);
         this._notifier?.destroy();
         this._notifier = null;
         super.destroy();

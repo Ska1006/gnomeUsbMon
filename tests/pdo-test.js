@@ -1,5 +1,5 @@
-// Офлайн-тест парсинга PD/PSY против синтетической фикстуры.
-// Запуск: make test  (генерит фикстуру и выставляет GNOME_USB_MON_SYSFS_ROOT).
+// Offline PD/PSY parsing test against a synthetic fixture.
+// Run: make test  (generates the fixture and sets GNOME_USB_MON_SYSFS_ROOT).
 import System from 'system';
 import GLib from 'gi://GLib';
 

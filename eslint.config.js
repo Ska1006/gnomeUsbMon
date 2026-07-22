@@ -1,5 +1,5 @@
-// Self-contained flat-config (без @eslint/js — работает с одним пакетом eslint).
-// resource:// и gi:// импорты eslint не резолвит, но биндинги из них считаются определёнными.
+// Self-contained flat config (no @eslint/js — works with the eslint package alone).
+// resource:// and gi:// imports aren't resolved by eslint; their bindings are treated as defined.
 const gjsGlobals = {
     console: 'readonly',
     globalThis: 'readonly',

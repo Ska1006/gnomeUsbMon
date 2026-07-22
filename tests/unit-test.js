@@ -1,4 +1,4 @@
-// Юнит-тесты чистых функций (без sysfs/GUdev). Запуск: gjs -m tests/unit-test.js
+// Unit tests for pure functions (no sysfs/GUdev). Run: gjs -m tests/unit-test.js
 import System from 'system';
 
 import {parseRole, pdoMaxWatts, activePdoIndex} from '../lib/pd.js';
