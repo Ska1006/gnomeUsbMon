@@ -6,16 +6,15 @@ import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
 import {readAllPorts, readPartnerPdos, pdoMaxWatts, activePdoIndex} from '../lib/pd.js';
-import {readUcsiSources, readBattery, acOnline} from '../lib/power.js';
+import {readUcsiSources, readBattery, acOnline, resetCaches} from '../lib/power.js';
 import {listUsbDevices, isIgnored, usbIconName} from '../lib/usb.js';
 import {UdevMonitor} from '../lib/udev.js';
 import {Notifier} from '../lib/notifier.js';
 
 import * as ExtMod from 'resource:///org/gnome/shell/extensions/extension.js';
-// gettext with identity fallback
 const _ = ExtMod.gettext ?? (s => s);
 
-// live-value poll interval while charging (seconds)
+// poll interval while charging, seconds
 const POLL_SECONDS = 2;
 
 export const Indicator = GObject.registerClass(
@@ -39,7 +38,6 @@ class UsbPdIndicator extends PanelMenu.Button {
 
         this._notifier = new Notifier();
 
-        // panel
         this._box = new St.BoxLayout({style_class: 'panel-status-indicators-box'});
         this._icon = new St.Icon({
             icon_name: 'media-removable-symbolic',
@@ -54,7 +52,6 @@ class UsbPdIndicator extends PanelMenu.Button {
         this._box.add_child(this._label);
         this.add_child(this._box);
 
-        // menu
         this._header = new PopupMenu.PopupImageMenuItem('USB & PD Monitor',
             'media-removable-symbolic', {reactive: false});
         this._header.add_style_class_name('umon-header');
@@ -73,22 +70,20 @@ class UsbPdIndicator extends PanelMenu.Button {
 
         this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
         const settingsItem = new PopupMenu.PopupMenuItem(_('Settings'));
-        settingsItem.connect('activate', () => this._extension.openPreferences());
+        settingsItem.connectObject('activate', () => this._extension.openPreferences(), this);
         this.menu.addMenuItem(settingsItem);
 
-        this.menu.connect('open-state-changed', (_m, open) => {
+        this.menu.connectObject('open-state-changed', (_m, open) => {
             this._menuOpen = open;
             if (open)
                 this.refresh();
             else
                 this._ensurePolling();
-        });
+        }, this);
 
-        // hotplug
         this._udev = new UdevMonitor();
         this._udev.connectObject('changed', () => this._scheduleRefresh(), this);
 
-        // settings
         this._settings.connectObject('changed', () => {
             if (this._timerId) {
                 GLib.Source.remove(this._timerId);
@@ -160,25 +155,22 @@ class UsbPdIndicator extends PanelMenu.Button {
         const ignore = this._settings.get_strv('hide-ignore-list');
         const externalUsb = usbAll.filter(d => d.external && !isIgnored(d, ignore));
 
-        // plug/unplug notifications
         this._diffNotify(onlineSources, pdoMap, usbAll);
 
-        // panel + header icon by state
         const deviceConnected = externalUsb.length > 0 || hasPartner;
         let iconName;
         if (this._chargerActive || battery?.charging)
-            iconName = 'battery-full-charging-symbolic';   // charger / charging
+            iconName = 'battery-full-charging-symbolic';
         else if (deviceConnected)
-            iconName = 'drive-harddisk-usb-symbolic';      // non-charging device
+            iconName = 'drive-harddisk-usb-symbolic';
         else if (ac)
-            iconName = 'ac-adapter-symbolic';              // external power, no PD
+            iconName = 'ac-adapter-symbolic';              // external power, no PD contract
         else
             iconName = 'media-removable-symbolic';
         this._icon.icon_name = iconName;
         if (this._header.setIcon)
             this._header.setIcon(iconName);
 
-        // panel label
         const mode = this._settings.get_string('panel-mode');
         let panelTxt = '';
         if (mode !== 'icon-only' && this._chargerActive) {
@@ -189,18 +181,12 @@ class UsbPdIndicator extends PanelMenu.Button {
         this._label.text = panelTxt;
         this._label.visible = panelTxt.length > 0;
 
-        // visibility
         const hasExternal = this._chargerActive || hasPartner || externalUsb.length > 0;
         const hide = this._settings.get_boolean('hide-when-idle') && !hasExternal;
         this.container.visible = !hide;
 
-        // header
         this._header.label.text = this._headerText(chargerWatts, battery);
-
-        // ports (+ PDO submenu)
         this._renderPorts(ports, pdoMap, sources);
-
-        // USB
         this._renderUsb(usbAll);
     }
 
@@ -303,10 +289,10 @@ class UsbPdIndicator extends PanelMenu.Button {
 
     _portIcon(p, src) {
         if (src)
-            return 'battery-full-charging-symbolic'; // active PD source
+            return 'battery-full-charging-symbolic';
         if (p.partner)
-            return 'drive-harddisk-usb-symbolic';    // device, not charging
-        return 'media-removable-symbolic';           // idle
+            return 'drive-harddisk-usb-symbolic';
+        return 'media-removable-symbolic';
     }
 
     _buildUsbItem(dev) {
@@ -416,8 +402,10 @@ class UsbPdIndicator extends PanelMenu.Button {
             this._udev = null;
         }
         this._settings.disconnectObject(this);
+        this.menu.disconnectObject(this);
         this._notifier?.destroy();
         this._notifier = null;
+        resetCaches();
         super.destroy();
     }
 });

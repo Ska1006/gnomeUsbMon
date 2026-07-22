@@ -53,7 +53,6 @@ export default class GnomeUsbMonPrefs extends ExtensionPreferences {
         });
         window.add(page);
 
-        // --- Panel ---
         const gPanel = new Adw.PreferencesGroup({title: _('Panel')});
         page.add(gPanel);
         gPanel.add(comboRow(
@@ -65,7 +64,6 @@ export default class GnomeUsbMonPrefs extends ExtensionPreferences {
             _('Hide when empty'), _('Hide the indicator when there are no external devices'),
             settings, 'hide-when-idle'));
 
-        // --- USB list ---
         const gUsb = new Adw.PreferencesGroup({title: _('USB list')});
         page.add(gUsb);
         gUsb.add(comboRow(
@@ -79,7 +77,6 @@ export default class GnomeUsbMonPrefs extends ExtensionPreferences {
             ['external', 'all'],
             [_('External only'), _('All')], handlers));
 
-        // --- Notifications ---
         const gNotify = new Adw.PreferencesGroup({title: _('Notifications')});
         page.add(gNotify);
         gNotify.add(switchRow(_('Charger'), _('PD charger plug/unplug'),
@@ -87,13 +84,11 @@ export default class GnomeUsbMonPrefs extends ExtensionPreferences {
         gNotify.add(switchRow(_('USB devices'), _('Other USB devices plug/unplug'),
             settings, 'notify-usb'));
 
-        // --- Advanced ---
         const gFeat = new Adw.PreferencesGroup({title: _('Advanced')});
         page.add(gFeat);
         gFeat.add(switchRow(_('PDO profiles'), _('Submenu with charger power profiles'),
             settings, 'show-pdo-list'));
 
-        // --- Ignore for auto-hide ---
         this._fillIgnoreGroup(page, settings);
     }
 
