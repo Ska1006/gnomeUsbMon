@@ -43,13 +43,20 @@ Monitor connected USB devices and USB-C **Power Delivery** chargers: negotiated 
 
 Everything through sysfs (`typec`, `power_supply`) + GUdev — **no root required**. PDO parsing is covered by offline tests on a sysfs fixture.
 
-## Install (local)
+## Install
 
 ```sh
-make install
-# Wayland: log out and back in, then:
-gnome-extensions enable gnome-usb-mon@ska1006.github.io
+git clone https://github.com/Ska1006/gnomeUsbMon.git
+cd gnomeUsbMon
+./install.sh
 ```
+
+Then activate the shell: on **Wayland** log out and back in; on **X11** press `Alt+F2`, type `r`, Enter. The extension is enabled automatically.
+
+- Uninstall: `./install.sh -u`
+- Settings: `gnome-extensions prefs gnome-usb-mon@ska1006.github.io`
+
+Requirements: `gnome-extensions` and `glib-compile-schemas` (from the `gnome-shell` / `glib2` packages). Translations are optional and need `gettext` (`msgfmt`).
 
 ## Development
 

@@ -43,13 +43,20 @@
 
 Всё через sysfs (`typec`, `power_supply`) + GUdev — **root не требуется**. PDO-парсинг покрыт офлайн-тестами на sysfs-фикстуре.
 
-## Установка (локально)
+## Установка
 
 ```sh
-make install
-# Wayland: перелогиниться, затем:
-gnome-extensions enable gnome-usb-mon@ska1006.github.io
+git clone https://github.com/Ska1006/gnomeUsbMon.git
+cd gnomeUsbMon
+./install.sh
 ```
+
+Затем перезапустить оболочку: на **Wayland** — перелогиниться; на **X11** — `Alt+F2`, ввести `r`, Enter. Расширение включается автоматически.
+
+- Удаление: `./install.sh -u`
+- Настройки: `gnome-extensions prefs gnome-usb-mon@ska1006.github.io`
+
+Требуется: `gnome-extensions` и `glib-compile-schemas` (пакеты `gnome-shell` / `glib2`). Переводы опциональны, нужен `gettext` (`msgfmt`).
 
 ## Разработка
 
