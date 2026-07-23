@@ -51,7 +51,7 @@ lint:
 pot:
 	mkdir -p po
 	xgettext --from-code=UTF-8 --language=JavaScript --keyword=_ \
-		--package-name=gnome-usb-mon --package-version=1.0 \
+		--package-name=gnome-usb-mon --package-version=1.1 \
 		-o po/gnome-usb-mon.pot \
 		extension.js prefs.js ui/indicator.js
 	@echo "pot → po/gnome-usb-mon.pot"

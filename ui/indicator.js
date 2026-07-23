@@ -23,7 +23,6 @@ class UsbPdIndicator extends PanelMenu.Button {
         super._init(0.5, 'USB & PD Monitor');
         this._extension = extension;
         this._settings = extension.getSettings();
-        this._menuOpen = false;
         this._chargerActive = false;
         this._timerId = 0;
         this._coalesceId = 0;
@@ -74,7 +73,6 @@ class UsbPdIndicator extends PanelMenu.Button {
         this.menu.addMenuItem(settingsItem);
 
         this.menu.connectObject('open-state-changed', (_m, open) => {
-            this._menuOpen = open;
             if (open)
                 this.refresh();
             else

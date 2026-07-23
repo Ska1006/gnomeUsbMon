@@ -6,6 +6,6 @@
   "settings-schema": "org.gnome.shell.extensions.gnome-usb-mon",
   "gettext-domain": "gnome-usb-mon",
   "url": "https://github.com/Ska1006/gnomeUsbMon",
-  "version": 1,
-  "version-name": "1.0"
+  "version": 2,
+  "version-name": "1.1"
 }
