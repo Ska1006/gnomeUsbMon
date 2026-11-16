@@ -2,10 +2,10 @@
   "uuid": "gnome-usb-mon@ska1006.github.io",
   "name": "USB & PD Monitor",
   "description": "Monitor connected USB devices and USB-C Power Delivery chargers: negotiated watts, PDO profiles, port roles and battery charge rate. Reads sysfs (typec, power_supply) via GUdev; no root required.",
-  "shell-version": ["50"],
+  "shell-version": ["50", "51"],
   "settings-schema": "org.gnome.shell.extensions.gnome-usb-mon",
   "gettext-domain": "gnome-usb-mon",
   "url": "https://github.com/Ska1006/gnomeUsbMon",
-  "version": 2,
-  "version-name": "1.1"
+  "version": 3,
+  "version-name": "1.2"
 }

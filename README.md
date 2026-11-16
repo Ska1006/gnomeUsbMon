@@ -8,7 +8,7 @@ Monitor connected USB devices and USB-C **Power Delivery** chargers: negotiated 
 
 - Full spec: [SPEC.md](SPEC.md)
 - UUID: `gnome-usb-mon@ska1006.github.io`
-- GNOME Shell **50** · Wayland/X11 · no root required
+- GNOME Shell **50, 51** · Wayland/X11 · no root required
 
 ## Appearance
 

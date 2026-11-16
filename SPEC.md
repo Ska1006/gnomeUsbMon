@@ -9,7 +9,7 @@
 
 | Компонент | Значение | Проверка |
 |---|---|---|
-| GNOME Shell | **50.3** → `shell-version: ["50"]`, ESM-расширение | `gnome-shell --version` |
+| GNOME Shell | **50.3** → `shell-version: ["50","51"]`, ESM-расширение | `gnome-shell --version` |
 | Сессия | Wayland / GNOME (роли не важны, extension в shell-процессе) | `$XDG_SESSION_TYPE` |
 | Type-C стек | `typec` + `typec_ucsi` + `ucsi_acpi` загружены | `lsmod` |
 | Порты | `port0`, `port1` (`/sys/class/typec/`), оба sink-capable, PD rev 2.0 | sysfs |
@@ -198,7 +198,7 @@ gnome-usb-mon@typoska.github.io/
 └── fixtures/                 # dev-режим: слепки sysfs для тестов парсинга
 ```
 
-`metadata.json`: `shell-version:["50"]`, `settings-schema`, `gettext-domain`.
+`metadata.json`: `shell-version:["50","51"]`, `settings-schema`, `gettext-domain`.
 GNOME 50 → ESM: `import Gio from 'gi://Gio'`, `export default class extends Extension`.
 
 ---

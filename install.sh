@@ -6,7 +6,7 @@ set -euo pipefail
 
 UUID="gnome-usb-mon@ska1006.github.io"
 DOMAIN="gnome-usb-mon"
-SUPPORTED_SHELL=50
+SUPPORTED_SHELL=(50 51)
 SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEST="${XDG_DATA_HOME:-$HOME/.local/share}/gnome-shell/extensions/$UUID"
 
@@ -28,8 +28,10 @@ need gnome-extensions
 # --- shell version (warn only) ---
 if command -v gnome-shell >/dev/null 2>&1; then
     ver="$(gnome-shell --version | grep -oE '[0-9]+' | head -1 || true)"
-    if [[ -n "$ver" && "$ver" != "$SUPPORTED_SHELL" ]]; then
-        echo "Warning: GNOME Shell $ver detected; this extension targets $SUPPORTED_SHELL and may not load."
+    ok=0
+    for v in "${SUPPORTED_SHELL[@]}"; do [[ "$ver" == "$v" ]] && ok=1; done
+    if [[ -n "$ver" && "$ok" == 0 ]]; then
+        echo "Warning: GNOME Shell $ver detected; this extension targets ${SUPPORTED_SHELL[*]} and may not load."
     fi
 fi
 

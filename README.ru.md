@@ -8,7 +8,7 @@
 
 - Полная спека: [SPEC.md](SPEC.md)
 - UUID: `gnome-usb-mon@ska1006.github.io`
-- GNOME Shell **50** · Wayland/X11 · root не требуется
+- GNOME Shell **50, 51** · Wayland/X11 · root не требуется
 
 ## Внешний вид
 
